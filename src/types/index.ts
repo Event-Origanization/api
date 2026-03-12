@@ -28,6 +28,85 @@ export interface UserCreationAttributes {
   role?: string;
 }
 
+export interface IProduct {
+  id: number;
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  images: string[];
+  variants: any[];
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface ProductCreationAttributes {
+  name: string;
+  slug: string;
+  description: string;
+  price: number;
+  images?: string[];
+  variants?: any[];
+  isActive?: boolean;
+}
+
+export interface IPost {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  media: string;
+  status: string;
+  publishAt: Date | null;
+  seoScore: number | null;
+  seoFeedback: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface PostCreationAttributes {
+  title: string;
+  slug: string;
+  content: string;
+  media?: string;
+  status?: string;
+  publishAt?: Date | null;
+  seoScore?: number | null;
+  seoFeedback?: string | null;
+}
+
+export interface IHighlightVideo {
+  id: number;
+  title: string;
+  url: string;
+  orderIndex: number;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface HighlightVideoCreationAttributes {
+  title: string;
+  url: string;
+  orderIndex?: number;
+  isActive?: boolean;
+}
+
+export interface IWebsiteConfig {
+  id: number;
+  key: string;
+  value_vi: string;
+  value_en: string;
+  value_zh: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+export interface WebsiteConfigCreationAttributes {
+  key: string;
+  value_vi?: string;
+  value_en?: string;
+  value_zh?: string;
+}
+
+
 // Request Extensions
 export interface AuthenticatedRequest extends Request {
   user?: {

@@ -176,6 +176,13 @@ export const TOKEN_EXPIRATION_CONSTANTS = {
   REFRESH_TOKEN_EXPIRES_IN: 7 * 24 * 60 * 60, // 7 days
 } as const;
 
+// Post Status
+export const POST_STATUS = {
+  DRAFT: 'DRAFT',
+  SCHEDULED: 'SCHEDULED',
+  PUBLISHED: 'PUBLISHED',
+} as const;
+
 // Development Environment
 export const DEVELOPMENT_ENVIRONMENT = 'development';
 
