@@ -2,6 +2,10 @@ import sequelize from "@/config/database";
 
 // Import models
 import { User } from "./User";
+import { Product } from "./Product";
+import { Post } from "./Post";
+import { HighlightVideo } from "./HighlightVideo";
+import { WebsiteConfig } from "./WebsiteConfig";
 
 // Initialize associations after all models are loaded
 const initializeAssociations = () => {
@@ -23,6 +27,10 @@ initializeAssociations();
 // Export models
 export {
   User,
+  Product,
+  Post,
+  HighlightVideo,
+  WebsiteConfig,
 };
 
 // Export sequelize instance
