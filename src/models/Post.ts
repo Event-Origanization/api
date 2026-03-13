@@ -5,9 +5,13 @@ import { POST_STATUS } from '@/constants';
 
 export class Post extends Model<IPost, PostCreationAttributes> {
   public id!: number;
-  public title!: string;
+  public title_vi!: string;
+  public title_en!: string;
+  public title_zh!: string;
   public slug!: string;
-  public content!: string;
+  public content_vi!: string;
+  public content_en!: string;
+  public content_zh!: string;
   public media!: string;
   public status!: string;
   public publishAt!: Date | null;
@@ -24,18 +28,34 @@ Post.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    title_vi: {
       type: DataTypes.STRING(255),
       allowNull: false,
+    },
+    title_en: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    title_zh: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
     },
     slug: {
       type: DataTypes.STRING(255),
       allowNull: false,
       unique: true,
     },
-    content: {
+    content_vi: {
       type: DataTypes.TEXT('long'),
       allowNull: false,
+    },
+    content_en: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+    },
+    content_zh: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
     },
     media: {
       type: DataTypes.STRING(255),

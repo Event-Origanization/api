@@ -30,31 +30,43 @@ export interface UserCreationAttributes {
 
 export interface IProduct {
   id: number;
-  name: string;
+  name_vi: string;
+  name_en: string;
+  name_zh: string;
   slug: string;
-  description: string;
+  content_vi: string;
+  content_en: string;
+  content_zh: string;
   price: number;
   images: string[];
-  variants: any[];
+  variants: Record<string, unknown>[];
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 export interface ProductCreationAttributes {
-  name: string;
+  name_vi: string;
+  name_en?: string;
+  name_zh?: string;
   slug: string;
-  description: string;
+  content_vi: string;
+  content_en?: string;
+  content_zh?: string;
   price: number;
   images?: string[];
-  variants?: any[];
+  variants?: Record<string, unknown>[];
   isActive?: boolean;
 }
 
 export interface IPost {
   id: number;
-  title: string;
+  title_vi: string;
+  title_en: string;
+  title_zh: string;
   slug: string;
-  content: string;
+  content_vi: string;
+  content_en: string;
+  content_zh: string;
   media: string;
   status: string;
   publishAt: Date | null;
@@ -64,9 +76,13 @@ export interface IPost {
   updatedAt: Date;
 }
 export interface PostCreationAttributes {
-  title: string;
+  title_vi: string;
+  title_en?: string;
+  title_zh?: string;
   slug: string;
-  content: string;
+  content_vi: string;
+  content_en?: string;
+  content_zh?: string;
   media?: string;
   status?: string;
   publishAt?: Date | null;
@@ -76,7 +92,9 @@ export interface PostCreationAttributes {
 
 export interface IHighlightVideo {
   id: number;
-  title: string;
+  title_vi: string;
+  title_en: string;
+  title_zh: string;
   url: string;
   orderIndex: number;
   isActive: boolean;
@@ -84,7 +102,9 @@ export interface IHighlightVideo {
   updatedAt: Date;
 }
 export interface HighlightVideoCreationAttributes {
-  title: string;
+  title_vi: string;
+  title_en?: string;
+  title_zh?: string;
   url: string;
   orderIndex?: number;
   isActive?: boolean;
@@ -141,13 +161,13 @@ export interface LogData {
   ip: string;
   userAgent: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  requestBody?: any;
+  requestBody?: unknown;
   error?: string;
 }
 
 // API Response Types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
@@ -219,7 +239,7 @@ export interface CloudinaryUploadOptions {
   folder?: string;
   public_id?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  transformation?: any[];
+  transformation?: Record<string, unknown>[];
   quality?: string | number;
   format?: string;
 }

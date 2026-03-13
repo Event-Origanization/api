@@ -140,7 +140,7 @@ const connectAndStart = async () => {
       resolve();
     });
 
-    httpServer.once("error", (err: any) => {
+    httpServer.once("error", (err: Error & { code?: string }) => {
       if (err.code === "EADDRINUSE") {
         reject(
           new Error(
@@ -174,8 +174,9 @@ const startServer = async () => {
       await connectAndStart();
       Logger.info("Server started successfully in production mode");
       break; // Thành công → thoát vòng lặp
-    } catch (error: any) {
-      Logger.error(`Startup failed: ${error.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      Logger.error(`Startup failed: ${message}`);
       Logger.warn("Retrying in 5 seconds... (Press Ctrl+C to stop)");
       await new Promise((resolve) => setTimeout(resolve, 5000));
     }

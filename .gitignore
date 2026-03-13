@@ -150,3 +150,5 @@ certbot/webroot/*
 
 # Local docker overrides
 docker-compose.override.yml
+
+.agent
