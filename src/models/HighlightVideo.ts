@@ -4,7 +4,9 @@ import { IHighlightVideo, HighlightVideoCreationAttributes } from '@/types';
 
 export class HighlightVideo extends Model<IHighlightVideo, HighlightVideoCreationAttributes> {
   public id!: number;
-  public title!: string;
+  public title_vi!: string;
+  public title_en!: string;
+  public title_zh!: string;
   public url!: string;
   public orderIndex!: number;
   public isActive!: boolean;
@@ -19,7 +21,15 @@ HighlightVideo.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    title: {
+    title_vi: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
+    title_en: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    title_zh: {
       type: DataTypes.STRING(255),
       allowNull: true,
     },

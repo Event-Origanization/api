@@ -10,16 +10,32 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      name_vi: {
         type: Sequelize.STRING(255),
         allowNull: false,
+      },
+      name_en: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      name_zh: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
       },
       slug: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true,
       },
-      description: {
+      content_vi: {
+        type: Sequelize.TEXT('long'),
+        allowNull: false,
+      },
+      content_en: {
+        type: Sequelize.TEXT('long'),
+        allowNull: true,
+      },
+      content_zh: {
         type: Sequelize.TEXT('long'),
         allowNull: true,
       },

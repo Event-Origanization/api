@@ -45,4 +45,6 @@ export const ENV = {
   NODE_ENV: process.env["NODE_ENV"],
   PORT: process.env["PORT"],
   HOST: process.env["HOST"],
+
+  GOOGLE_TRANSLATE_URL: process.env["GOOGLE_TRANSLATE_URL"] || "https://translate.googleapis.com/translate_a/single",
 };

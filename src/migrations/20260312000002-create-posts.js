@@ -10,18 +10,34 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      title_vi: {
         type: Sequelize.STRING(255),
         allowNull: false,
+      },
+      title_en: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+      },
+      title_zh: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
       },
       slug: {
         type: Sequelize.STRING(255),
         allowNull: false,
         unique: true,
       },
-      content: {
+      content_vi: {
         type: Sequelize.TEXT('long'),
         allowNull: false,
+      },
+      content_en: {
+        type: Sequelize.TEXT('long'),
+        allowNull: true,
+      },
+      content_zh: {
+        type: Sequelize.TEXT('long'),
+        allowNull: true,
       },
       media: {
         type: Sequelize.STRING(255),
