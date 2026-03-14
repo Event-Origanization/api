@@ -3,8 +3,47 @@ export const ROUTES = {
   // Main Resources
   AUTH: '/auth',
   USERS: '/users',
+  SEO: '/seo',
+  CONFIGS: '/configs',
+  PRODUCTS: '/products',
   // Health Check
   HEALTH: '/health',
+  POSTS: '/posts',
+  HIGHLIGHT_VIDEOS: '/highlight-videos',
+} as const;
+
+// Product Route Paths
+export const PRODUCT_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_ID: '/:id',
+  GET_BY_SLUG: '/slug/:slug',
+  CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
+} as const;
+
+
+// Post Route Paths
+export const POST_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_ID: '/:id',
+  GET_BY_SLUG: '/slug/:slug',
+  CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
+} as const;
+
+
+// Highlight Video Route Paths
+export const HIGHLIGHT_VIDEO_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_ID: '/:id',
+  CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
 } as const;
 
 
@@ -28,4 +67,21 @@ export const USER_ROUTES = {
   UPDATE_PROFILE: '/profile',
   CHANGE_PASSWORD: '/change-password',
   DELETE: '/:id',
+} as const;
+
+// SEO Route Paths
+export const SEO_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_PAGE: '/:pageKey',
+  UPDATE: '/:pageKey',
+} as const;
+
+// Website Config Route Paths
+export const WEBSITE_CONFIG_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_GROUP: '/group/:group',
+  UPDATE: '/:key',
+  BULK_UPDATE: '/bulk-update',
 } as const;

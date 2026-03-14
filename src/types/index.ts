@@ -58,6 +58,16 @@ export interface ProductCreationAttributes {
   isActive?: boolean;
 }
 
+export interface CreateProductRequest extends ProductCreationAttributes {
+  translateName?: boolean;
+  translateContent?: boolean;
+}
+
+export interface UpdateProductRequest extends Partial<ProductCreationAttributes> {
+  translateName?: boolean;
+  translateContent?: boolean;
+}
+
 export interface IPost {
   id: number;
   title_vi: string;
@@ -90,12 +100,23 @@ export interface PostCreationAttributes {
   seoFeedback?: string | null;
 }
 
+export interface CreatePostRequest extends PostCreationAttributes {
+  translateTitle?: boolean;
+  translateContent?: boolean;
+}
+
+export interface UpdatePostRequest extends Partial<PostCreationAttributes> {
+  translateTitle?: boolean;
+  translateContent?: boolean;
+}
+
 export interface IHighlightVideo {
   id: number;
   title_vi: string;
   title_en: string;
   title_zh: string;
   url: string;
+  thumbnail: string | null;
   orderIndex: number;
   isActive: boolean;
   createdAt: Date;
@@ -106,13 +127,23 @@ export interface HighlightVideoCreationAttributes {
   title_en?: string;
   title_zh?: string;
   url: string;
+  thumbnail?: string | null;
   orderIndex?: number;
   isActive?: boolean;
+}
+
+export interface CreateHighlightVideoRequest extends HighlightVideoCreationAttributes {
+  translateTitle?: boolean;
+}
+
+export interface UpdateHighlightVideoRequest extends Partial<HighlightVideoCreationAttributes> {
+  translateTitle?: boolean;
 }
 
 export interface IWebsiteConfig {
   id: number;
   key: string;
+  group: string;
   value_vi: string;
   value_en: string;
   value_zh: string;
@@ -121,9 +152,35 @@ export interface IWebsiteConfig {
 }
 export interface WebsiteConfigCreationAttributes {
   key: string;
+  group?: string;
   value_vi?: string;
   value_en?: string;
   value_zh?: string;
+}
+
+export interface ISeoMeta {
+  id: number;
+  pageKey: string;
+  title_vi: string;
+  title_en: string;
+  title_zh: string;
+  description_vi: string;
+  description_en: string;
+  description_zh: string;
+  path: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SeoMetaCreationAttributes {
+  pageKey: string;
+  title_vi?: string;
+  title_en?: string;
+  title_zh?: string;
+  description_vi?: string;
+  description_en?: string;
+  description_zh?: string;
+  path?: string;
 }
 
 

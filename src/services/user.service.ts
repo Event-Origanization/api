@@ -71,8 +71,7 @@ export class UserService {
    */
   static async checkUserExists(
     email: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ): Promise<{ exists: boolean; existingUser?: any }> {
+  ): Promise<{ exists: boolean; existingUser?: Partial<IUser> }> {
     return await UserValidationUtils.checkUserExists(email);
   }
 
@@ -142,9 +141,8 @@ export class UserService {
     const tokens = JWTUtils.generateTokenPair(user);
 
     // Return user data without password and tokens
-    const userData = user.toJSON() as IUser;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (userData as any).password; // Remove password from response
+    const { password: _password, ...userDataWithoutPassword } = user.toJSON() as IUser;
+    const userData = userDataWithoutPassword as IUser;
 
     return {
       user: userData,

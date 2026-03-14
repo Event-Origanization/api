@@ -6,6 +6,7 @@ import { Product } from "./Product";
 import { Post } from "./Post";
 import { HighlightVideo } from "./HighlightVideo";
 import { WebsiteConfig } from "./WebsiteConfig";
+import { SeoMeta } from "./SeoMeta";
 
 // Initialize associations after all models are loaded
 const initializeAssociations = () => {
@@ -31,6 +32,7 @@ export {
   Post,
   HighlightVideo,
   WebsiteConfig,
+  SeoMeta,
 };
 
 // Export sequelize instance

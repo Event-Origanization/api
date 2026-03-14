@@ -5,6 +5,7 @@ import { IWebsiteConfig, WebsiteConfigCreationAttributes } from '@/types';
 export class WebsiteConfig extends Model<IWebsiteConfig, WebsiteConfigCreationAttributes> {
   public id!: number;
   public key!: string;
+  public group!: string;
   public value_vi!: string;
   public value_en!: string;
   public value_zh!: string;
@@ -23,6 +24,11 @@ WebsiteConfig.init(
       type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
+    },
+    group: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      defaultValue: 'GENERAL',
     },
     value_vi: {
       type: DataTypes.TEXT,
@@ -49,6 +55,11 @@ WebsiteConfig.init(
     sequelize,
     tableName: 'website_configs',
     modelName: 'WebsiteConfig',
+    indexes: [
+      {
+        fields: ['group']
+      }
+    ]
   }
 );
 
