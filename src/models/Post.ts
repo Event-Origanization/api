@@ -58,7 +58,7 @@ Post.init(
       allowNull: true,
     },
     media: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.TEXT('long'),
       allowNull: true,
     },
     status: {

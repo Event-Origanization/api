@@ -8,6 +8,7 @@ export class HighlightVideo extends Model<IHighlightVideo, HighlightVideoCreatio
   public title_en!: string;
   public title_zh!: string;
   public url!: string;
+  public thumbnail!: string | null;
   public orderIndex!: number;
   public isActive!: boolean;
   public readonly createdAt!: Date;
@@ -36,6 +37,10 @@ HighlightVideo.init(
     url: {
       type: DataTypes.STRING(255),
       allowNull: false,
+    },
+    thumbnail: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
     },
     orderIndex: {
       type: DataTypes.INTEGER,

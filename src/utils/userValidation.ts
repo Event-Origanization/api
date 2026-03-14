@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { User } from '@/models';
 import { MESSAGES, USER_ROLES } from '@/constants';
 import { Op } from 'sequelize';
-import { UserValidationData, ValidationResult } from '@/types';
+import { IUser, UserValidationData, ValidationResult } from '@/types';
 
 
 export class UserValidationUtils {
@@ -81,8 +81,7 @@ export class UserValidationUtils {
   static validateRole(role?: string): ValidationResult {
     const errors: string[] = [];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if (role && !Object.values(USER_ROLES).includes(role as any)) {
+    if (role && !(Object.values(USER_ROLES) as string[]).includes(role)) {
       errors.push(`Invalid role! Must be one of: ${Object.values(USER_ROLES).join(', ')}`);
     }
 
@@ -133,8 +132,7 @@ export class UserValidationUtils {
   /**
    * Check if user already exists by username or email
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static async checkUserExists(email: string): Promise<{ exists: boolean; existingUser?: any }> {
+  static async checkUserExists(email: string): Promise<{ exists: boolean; existingUser?: Partial<IUser> }> {
     try {
       const existingUser = await User.findOne({
         where: {
@@ -171,8 +169,7 @@ export class UserValidationUtils {
    * Determine if user should be active based on role
    */
   static shouldBeActive(role: string): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return [USER_ROLES.ROLE_ADMIN].includes(role as any);
+    return ([USER_ROLES.ROLE_ADMIN] as string[]).includes(role);
   }
 
   /**
@@ -183,8 +180,7 @@ export class UserValidationUtils {
     email: string;
     password: string;
     role: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }): Promise<{ user: any; success: boolean; error?: string }> {
+  }): Promise<{ user: IUser | null; success: boolean; error?: string }> {
     try {
       // Check if user already exists
       const existenceCheck = await this.checkUserExists(userData.email);
