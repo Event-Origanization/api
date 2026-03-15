@@ -78,6 +78,7 @@ export class HighlightVideoService {
 
     // Loại bỏ các cờ trước khi lưu vào DB
     const { translateTitle, ...rest } = data;
+    void translateTitle;
     return await HighlightVideo.create(rest as HighlightVideoCreationAttributes);
   }
 
@@ -101,6 +102,7 @@ export class HighlightVideoService {
     }
 
     const { translateTitle, ...rest } = data;
+    void translateTitle;
     return await video.update(rest);
   }
 

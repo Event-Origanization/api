@@ -142,6 +142,7 @@ export class UserService {
 
     // Return user data without password and tokens
     const { password: _password, ...userDataWithoutPassword } = user.toJSON() as IUser;
+    void _password;
     const userData = userDataWithoutPassword as IUser;
 
     return {
