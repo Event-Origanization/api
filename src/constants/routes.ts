@@ -12,6 +12,7 @@ export const ROUTES = {
   HIGHLIGHT_VIDEOS: '/highlight-videos',
   HOME_VIDEOS: '/home-videos',
   NEWSLETTER: '/newsletter',
+  DASHBOARD: '/dashboard',
 } as const;
 
 // Product Route Paths
@@ -107,4 +108,11 @@ export const WEBSITE_CONFIG_ROUTES = {
   GET_BY_GROUP: '/group/:group',
   UPDATE: '/:key',
   BULK_UPDATE: '/bulk-update',
+} as const;
+
+// Dashboard Route Paths
+export const DASHBOARD_ROUTES = {
+  BASE: '/',
+  OVERVIEW: '/overview',
+  YEARLY_CHARTS: '/charts/yearly',
 } as const;

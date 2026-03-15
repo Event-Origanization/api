@@ -394,7 +394,7 @@ export interface INewsletterSubscriber {
   updatedAt: Date;
 }
 
-export interface NewsletterSubscriberCreationAttributes extends Omit<INewsletterSubscriber, 'id' | 'createdAt' | 'updatedAt'> {}
+export type NewsletterSubscriberCreationAttributes = Omit<INewsletterSubscriber, 'id' | 'createdAt' | 'updatedAt'>;
 
 export interface CreateNewsletterSubscriberRequest {
   email: string;

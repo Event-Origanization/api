@@ -91,6 +91,8 @@ export class PostService {
 
     // Loại bỏ các cờ trước khi lưu vào DB
     const { translateTitle, translateContent, ...rest } = data;
+    void translateTitle;
+    void translateContent;
     return await Post.create(rest as PostCreationAttributes);
   }
 
@@ -134,6 +136,8 @@ export class PostService {
     }
 
     const { translateTitle, translateContent, ...rest } = data;
+    void translateTitle;
+    void translateContent;
     return await post.update(rest);
   }
 

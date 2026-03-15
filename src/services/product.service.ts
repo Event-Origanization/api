@@ -103,6 +103,8 @@ export class ProductService {
 
     // Loại bỏ các cờ trước khi lưu vào DB
     const { translateName, translateContent, ...rest } = data;
+    void translateName;
+    void translateContent;
     return await Product.create(rest as ProductCreationAttributes);
   }
 
@@ -146,6 +148,8 @@ export class ProductService {
     }
 
     const { translateName, translateContent, ...rest } = data;
+    void translateName;
+    void translateContent;
     return await product.update(rest);
   }
 

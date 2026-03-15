@@ -78,6 +78,7 @@ export class HomeVideoService {
 
     // Loại bỏ các cờ trước khi lưu vào DB
     const { translateTitle, ...rest } = data;
+    void translateTitle;
     return await HomeVideo.create(rest as HomeVideoCreationAttributes);
   }
 
@@ -101,6 +102,7 @@ export class HomeVideoService {
     }
 
     const { translateTitle, ...rest } = data;
+    void translateTitle;
     return await video.update(rest);
   }
 
