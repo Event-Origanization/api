@@ -10,6 +10,8 @@ export const ROUTES = {
   HEALTH: '/health',
   POSTS: '/posts',
   HIGHLIGHT_VIDEOS: '/highlight-videos',
+  HOME_VIDEOS: '/home-videos',
+  NEWSLETTER: '/newsletter',
 } as const;
 
 // Product Route Paths
@@ -42,6 +44,27 @@ export const HIGHLIGHT_VIDEO_ROUTES = {
   GET_ALL: '/',
   GET_BY_ID: '/:id',
   CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
+} as const;
+
+
+// Home Video Route Paths
+export const HOME_VIDEO_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_ID: '/:id',
+  CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
+} as const;
+
+
+// Newsletter Route Paths
+export const NEWSLETTER_ROUTES = {
+  BASE: '/',
+  SUBSCRIBE: '/subscribe',
+  GET_ALL: '/',
   UPDATE: '/:id',
   DELETE: '/:id',
 } as const;
