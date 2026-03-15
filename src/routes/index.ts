@@ -6,6 +6,8 @@ import configRoutes from "./website-config.routes";
 import productRoutes from "./product.routes";
 import postRoutes from "./post.routes";
 import highlightVideoRoutes from "./highlight-video.routes";
+import homeVideoRoutes from "./home-video.routes";
+import newsletterRoutes from "./newsletter-subscriber.routes";
 
 import { ROUTES } from "@/constants";
 
@@ -28,5 +30,7 @@ router.use(ROUTES.CONFIGS, configRoutes);
 router.use(ROUTES.PRODUCTS, productRoutes);
 router.use(ROUTES.POSTS, postRoutes);
 router.use(ROUTES.HIGHLIGHT_VIDEOS, highlightVideoRoutes);
+router.use(ROUTES.HOME_VIDEOS, homeVideoRoutes);
+router.use(ROUTES.NEWSLETTER, newsletterRoutes);
 
 export default router;

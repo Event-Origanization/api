@@ -18,6 +18,15 @@ module.exports = {
         updated_at: new Date()
       },
       {
+        key: 'WEBSITE_FULLNAME',
+        group: 'GENERAL',
+        value_vi: 'CÔNG TY TNHH TRUYỀN THÔNG VÀ TỔ CHỨC SỰ KIỆN 5P EVENT',
+        value_en: '5P EVENT MEDIA AND EVENT ORGANIZATION CO., LTD',
+        value_zh: '5P EVENT 传媒与活动策划有限公司',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
         key: 'WEBSITE_SLOGAN',
         group: 'GENERAL',
         value_vi: 'Khởi nguồn cảm xúc, trọn vẹn thương hiệu',

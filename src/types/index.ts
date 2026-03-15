@@ -140,6 +140,35 @@ export interface UpdateHighlightVideoRequest extends Partial<HighlightVideoCreat
   translateTitle?: boolean;
 }
 
+export interface IHomeVideo {
+  id: number;
+  title_vi: string;
+  title_en: string;
+  title_zh: string;
+  url: string;
+  thumbnail: string | null;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface HomeVideoCreationAttributes {
+  title_vi: string;
+  title_en?: string;
+  title_zh?: string;
+  url: string;
+  thumbnail?: string | null;
+  isActive?: boolean;
+}
+
+export interface CreateHomeVideoRequest extends HomeVideoCreationAttributes {
+  translateTitle?: boolean;
+}
+
+export interface UpdateHomeVideoRequest extends Partial<HomeVideoCreationAttributes> {
+  translateTitle?: boolean;
+}
+
 export interface IWebsiteConfig {
   id: number;
   key: string;
@@ -354,4 +383,23 @@ export interface UserValidationData {
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
+}
+
+// Newsletter Subscriber Types
+export interface INewsletterSubscriber {
+  id: number;
+  email: string;
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface NewsletterSubscriberCreationAttributes extends Omit<INewsletterSubscriber, 'id' | 'createdAt' | 'updatedAt'> {}
+
+export interface CreateNewsletterSubscriberRequest {
+  email: string;
+}
+
+export interface UpdateNewsletterSubscriberRequest {
+  isActive: boolean;
 }

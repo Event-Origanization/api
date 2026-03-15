@@ -5,6 +5,8 @@ import { User } from "./User";
 import { Product } from "./Product";
 import { Post } from "./Post";
 import { HighlightVideo } from "./HighlightVideo";
+import { HomeVideo } from "./HomeVideo";
+import { NewsletterSubscriber } from "./NewsletterSubscriber";
 import { WebsiteConfig } from "./WebsiteConfig";
 import { SeoMeta } from "./SeoMeta";
 
@@ -31,6 +33,8 @@ export {
   Product,
   Post,
   HighlightVideo,
+  HomeVideo,
+  NewsletterSubscriber,
   WebsiteConfig,
   SeoMeta,
 };
