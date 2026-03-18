@@ -2,8 +2,9 @@
 export const PAGE_KEYS = {
   HOME: 'HOME',
   ABOUT: 'ABOUT',
-  PRODUCTS: 'PRODUCTS',
-  POSTS: 'POSTS',
+  EVENTS: 'EVENTS',
+  SOUND_LIGHT: 'SOUND_LIGHT',
+  RENTAL: 'RENTAL',
   CONTACT: 'CONTACT',
 } as const;
 

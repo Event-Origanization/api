@@ -13,6 +13,7 @@ export const ROUTES = {
   HOME_VIDEOS: '/home-videos',
   NEWSLETTER: '/newsletter',
   DASHBOARD: '/dashboard',
+  PARTNERS: '/partners',
 } as const;
 
 // Product Route Paths
@@ -115,4 +116,15 @@ export const DASHBOARD_ROUTES = {
   BASE: '/',
   OVERVIEW: '/overview',
   YEARLY_CHARTS: '/charts/yearly',
+} as const;
+
+// Partner Route Paths
+export const PARTNER_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_ACTIVE: '/active',
+  GET_BY_ID: '/:id',
+  CREATE: '/',
+  UPDATE: '/:id',
+  DELETE: '/:id',
 } as const;

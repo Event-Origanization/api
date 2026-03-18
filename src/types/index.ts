@@ -403,3 +403,6 @@ export interface CreateNewsletterSubscriberRequest {
 export interface UpdateNewsletterSubscriberRequest {
   isActive: boolean;
 }
+
+// Partner Types
+export * from './partner.types';
