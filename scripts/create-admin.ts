@@ -57,11 +57,11 @@ async function createAdmin() {
     const admin = result.user;
     Logger.info('\n✅ Admin account created successfully!');
     Logger.info('📋 Account Details:');
-    Logger.info(`   Username: ${admin.username}`);
-    Logger.info(`   Email: ${admin.email}`);
-    Logger.info(`   Role: ${admin.role}`);
-    Logger.info(`   Status: ${admin.isActive ? 'Active' : 'Inactive'}`);
-    Logger.info(`   Created: ${admin.createdAt}`);
+    Logger.info(`   Username: ${admin?.username}`);
+    Logger.info(`   Email: ${admin?.email}`);
+    Logger.info(`   Role: ${admin?.role}`);
+    Logger.info(`   Status: ${admin?.isActive ? 'Active' : 'Inactive'}`);
+    Logger.info(`   Created: ${admin?.createdAt}`);
     Logger.info('\n🔐 You can now login with these credentials.');
 
   } catch (error) {

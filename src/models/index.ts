@@ -10,6 +10,7 @@ import { NewsletterSubscriber } from "./NewsletterSubscriber";
 import { WebsiteConfig } from "./WebsiteConfig";
 import { SeoMeta } from "./SeoMeta";
 import { Partner } from "./Partner";
+import { ContactMessage } from "./ContactMessage";
 
 // Initialize associations after all models are loaded
 const initializeAssociations = () => {
@@ -39,6 +40,7 @@ export {
   WebsiteConfig,
   SeoMeta,
   Partner,
+  ContactMessage,
 };
 
 // Export sequelize instance

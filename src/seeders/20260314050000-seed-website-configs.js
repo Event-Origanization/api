@@ -63,6 +63,15 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        key: 'CONTACT_MAP_IFRAME',
+        group: 'CONTACT',
+        value_vi: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.178855780718!2d106.68459131533487!3d10.72714419234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f6bce7e1a23%3A0x8b3c65d00e2b8048!2s122%2F46%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Ph%C6%B0%E1%BB%9Dng%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Qu%E1%BA%ADn%2012%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh!5e0!3m2!1svi!2svn!4v1700000000000!5m2!1svi!2svn',
+        value_en: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.178855780718!2d106.68459131533487!3d10.72714419234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f6bce7e1a23%3A0x8b3c65d00e2b8048!2s122%2F46%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Ph%C6%B0%E1%BB%9Dng%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Qu%E1%BA%ADn%2012%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh!5e0!3m2!1svi!2svn!4v1700000000000!5m2!1svi!2svn',
+        value_zh: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3920.178855780718!2d106.68459131533487!3d10.72714419234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f6bce7e1a23%3A0x8b3c65d00e2b8048!2s122%2F46%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Ph%C6%B0%E1%BB%9Dng%20Th%E1%BA%A1nh%20Xu%C3%A2n%2022%2C%20Qu%E1%BA%ADn%2012%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh!5e0!3m2!1svi!2svn!4v1700000000000!5m2!1svi!2svn',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
       // SOCIAL
       {
         key: 'SOCIAL_FACEBOOK',

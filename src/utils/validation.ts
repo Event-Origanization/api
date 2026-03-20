@@ -75,12 +75,12 @@ export function validatePaginationParams(pagination: {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateId(id: any, fieldName: string = 'ID'): { isValid: boolean; value?: number; error?: string } {
   if (!id) {
-    return { isValid: false, error: `${fieldName} is required` };
+    return { isValid: false, error: `${fieldName} là bắt buộc` };
   }
   
   const numericId = Math.floor(Number(id));
   if (numericId <= 0 || isNaN(numericId)) {
-    return { isValid: false, error: `Invalid ${fieldName}` };
+    return { isValid: false, error: `${fieldName} không hợp lệ` };
   }
   
   return { isValid: true, value: numericId };
@@ -92,14 +92,14 @@ export function validateId(id: any, fieldName: string = 'ID'): { isValid: boolea
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function validateIds(ids: any, fieldName: string = 'IDs'): { isValid: boolean; values?: number[]; error?: string } {
   if (!ids) {
-    return { isValid: false, error: `${fieldName} are required` };
+    return { isValid: false, error: `${fieldName} là bắt buộc` };
   }
   
   const idArray = Array.isArray(ids) ? ids : [ids];
   const numericIds = idArray.map(id => Math.floor(Number(id)));
   
   if (numericIds.some(id => id <= 0 || isNaN(id))) {
-    return { isValid: false, error: `Invalid ${fieldName}` };
+    return { isValid: false, error: `${fieldName} không hợp lệ` };
   }
   
   return { isValid: true, values: numericIds };
@@ -118,15 +118,15 @@ export function validatePriceRange(minPrice: string, maxPrice: string): {
   const max = parseFloat(maxPrice);
   
   if (isNaN(min) || isNaN(max)) {
-    return { isValid: false, error: 'Invalid price values' };
+    return { isValid: false, error: 'Giá trị giá không hợp lệ' };
   }
   
   if (min < 0 || max < 0) {
-    return { isValid: false, error: 'Prices cannot be negative' };
+    return { isValid: false, error: 'Giá không thể là số âm' };
   }
   
   if (min > max) {
-    return { isValid: false, error: 'Min price cannot be greater than max price' };
+    return { isValid: false, error: 'Giá tối thiểu không thể lớn hơn giá tối đa' };
   }
   
   return { isValid: true, min, max };
@@ -137,12 +137,12 @@ export function validatePriceRange(minPrice: string, maxPrice: string): {
  */
 export function validateSearchTerm(search: string): { isValid: boolean; value?: string; error?: string } {
   if (!search || typeof search !== 'string') {
-    return { isValid: false, error: 'Search term is required' };
+    return { isValid: false, error: 'Từ khóa tìm kiếm là bắt buộc' };
   }
   
   const sanitized = sanitizeSearchInput(search);
   if (sanitized.length === 0) {
-    return { isValid: false, error: 'Invalid search term' };
+    return { isValid: false, error: 'Từ khóa tìm kiếm không hợp lệ' };
   }
   
   return { isValid: true, value: sanitized };
@@ -157,11 +157,11 @@ export function validateStringField(value: string | undefined, fieldName: string
   error?: string 
 } {
   if (required && (!value || typeof value !== 'string' || value.trim().length === 0)) {
-    return { isValid: false, error: `${fieldName} is required` };
+    return { isValid: false, error: `${fieldName} là bắt buộc` };
   }
   
   if (value && typeof value !== 'string') {
-    return { isValid: false, error: `Invalid ${fieldName}` };
+    return { isValid: false, error: `${fieldName} không hợp lệ` };
   }
   
   return { isValid: true, value: value?.trim() };
@@ -176,16 +176,16 @@ export function validateNumericField(value: string | undefined, fieldName: strin
   error?: string 
 } {
   if (value === undefined || value === null || value === '') {
-    return { isValid: false, error: `${fieldName} is required` };
+    return { isValid: false, error: `${fieldName} là bắt buộc` };
   }
   
   const numericValue = parseFloat(value);
   if (isNaN(numericValue)) {
-    return { isValid: false, error: `Invalid ${fieldName}` };
+    return { isValid: false, error: `${fieldName} không hợp lệ` };
   }
   
   if (numericValue < min) {
-    return { isValid: false, error: `${fieldName} must be at least ${min}` };
+    return { isValid: false, error: `${fieldName} phải lớn hơn hoặc bằng ${min}` };
   }
   
   return { isValid: true, value: numericValue };
@@ -200,7 +200,7 @@ export function validateBooleanField(value: string | undefined, fieldName: strin
   error?: string 
 } {
   if (value === undefined || value === null) {
-    return { isValid: false, error: `${fieldName} is required` };
+    return { isValid: false, error: `${fieldName} là bắt buộc` };
   }
   
   if (typeof value === 'boolean') {
@@ -214,7 +214,7 @@ export function validateBooleanField(value: string | undefined, fieldName: strin
     }
   }
   
-  return { isValid: false, error: `Invalid ${fieldName}` };
+  return { isValid: false, error: `${fieldName} không hợp lệ` };
 }
 
 /**
@@ -223,7 +223,7 @@ export function validateBooleanField(value: string | undefined, fieldName: strin
 export function validateEmail(email: string): { isValid: boolean; error?: string } {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
-    return { isValid: false, error: 'Invalid email format' };
+    return { isValid: false, error: 'Định dạng email không hợp lệ' };
   }
   return { isValid: true };
 }
@@ -233,19 +233,19 @@ export function validateEmail(email: string): { isValid: boolean; error?: string
  */
 export function validatePassword(password: string): { isValid: boolean; error?: string } {
   if (password.length < 8) {
-    return { isValid: false, error: 'Password must be at least 8 characters long' };
+    return { isValid: false, error: 'Mật khẩu phải dài ít nhất 8 ký tự' };
   }
   
   if (!/(?=.*[a-z])/.test(password)) {
-    return { isValid: false, error: 'Password must contain at least one lowercase letter' };
+    return { isValid: false, error: 'Mật khẩu phải chứa ít nhất một chữ cái thường' };
   }
   
   if (!/(?=.*[A-Z])/.test(password)) {
-    return { isValid: false, error: 'Password must contain at least one uppercase letter' };
+    return { isValid: false, error: 'Mật khẩu phải chứa ít nhất một chữ cái viết hoa' };
   }
   
   if (!/(?=.*\d)/.test(password)) {
-    return { isValid: false, error: 'Password must contain at least one number' };
+    return { isValid: false, error: 'Mật khẩu phải chứa ít nhất một chữ số' };
   }
   
   return { isValid: true };
@@ -259,7 +259,7 @@ export function validateUrl(url: string): { isValid: boolean; error?: string } {
     new URL(url);
     return { isValid: true };
   } catch {
-    return { isValid: false, error: 'Invalid URL format' };
+    return { isValid: false, error: 'Định dạng URL không hợp lệ' };
   }
 }
 
@@ -269,7 +269,7 @@ export function validateUrl(url: string): { isValid: boolean; error?: string } {
 export function validateSlug(slug: string): { isValid: boolean; error?: string } {
   const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
   if (!slugRegex.test(slug)) {
-    return { isValid: false, error: 'Invalid slug format. Use lowercase letters, numbers, and hyphens only' };
+    return { isValid: false, error: 'Định dạng slug không hợp lệ. Chỉ sử dụng chữ cái thường, số và dấu gạch ngang' };
   }
   return { isValid: true };
 }

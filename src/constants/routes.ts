@@ -14,6 +14,7 @@ export const ROUTES = {
   NEWSLETTER: '/newsletter',
   DASHBOARD: '/dashboard',
   PARTNERS: '/partners',
+  CONTACT_MESSAGES: '/contact-messages',
 } as const;
 
 // Product Route Paths
@@ -126,5 +127,15 @@ export const PARTNER_ROUTES = {
   GET_BY_ID: '/:id',
   CREATE: '/',
   UPDATE: '/:id',
+  DELETE: '/:id',
+} as const;
+
+// Contact Message Route Paths
+export const CONTACT_MESSAGE_ROUTES = {
+  BASE: '/',
+  GET_ALL: '/',
+  GET_BY_ID: '/:id',
+  CREATE: '/',
+  MARK_AS_READ: '/:id/read',
   DELETE: '/:id',
 } as const;
