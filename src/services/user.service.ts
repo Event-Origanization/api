@@ -121,20 +121,20 @@ export class UserService {
     });
 
     if (!user) {
-      throw new Error("Invalid email or password");
+      throw new Error("Sai tài khoản hoặc mật khẩu");
     }
 
     // Check if user is active
     if (!user.isActive) {
       throw new Error(
-        "Account is not activated. Please verify your email first."
+        "Tài khoản chưa được xác thực. Vui lòng kiểm tra email để xác thực."
       );
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error("Invalid email or password");
+      throw new Error("Sai tài khoản hoặc mật khẩu");
     }
 
     // Generate tokens
@@ -280,7 +280,7 @@ export class UserService {
     }
 
     if (!user.isActive) {
-      throw new Error("Account is deactivated");
+      throw new Error("Tài khoản đã bị vô hiệu hóa");
     }
 
     // Verify current password
@@ -289,7 +289,7 @@ export class UserService {
       user.password
     );
     if (!isCurrentPasswordValid) {
-      throw new Error("Current password is incorrect");
+      throw new Error("Mật khẩu hiện tại không chính xác");
     }
 
     // Hash new password using utility

@@ -15,7 +15,10 @@ cp .env.example .env
 # Edit .env with your config
 
 # Run migrations
-npm run migrate
+npm run db:migrate
+
+# Seed initial data (Website configs, etc.)
+npm run db:seed:all
 
 # Start dev server
 npm run dev
@@ -115,9 +118,10 @@ npm run build         # Build TypeScript
 npm run start         # Start production server
 
 # Database
-npm run migrate       # Run migrations
-npm run migrate:undo  # Rollback last migration
-npm run seed          # Seed data
+npm run db:migrate         # Run migrations
+npm run db:migrate:undo    # Rollback last migration
+npm run db:seed:all        # Seed all data
+npm run db:migrate:status  # Check migration status
 
 # Code Quality
 npm run lint          # Run ESLint
@@ -141,7 +145,8 @@ docker-compose logs -f [service]
 docker-compose build --no-cache
 
 # Execute command in container
-docker-compose exec api npm run migrate
+docker-compose exec api npm run db:migrate
+docker-compose exec api npm run db:seed:all
 ```
 
 ## 📦 Deployment
@@ -210,13 +215,13 @@ docker-compose up -d
 ### Migration failed
 ```bash
 # Rollback
-npm run migrate:undo
+npm run db:migrate:undo
 
 # Check migration status
-npx sequelize-cli db:migrate:status
+npm run db:migrate:status
 
 # Re-run
-npm run migrate
+npm run db:migrate
 ```
 
 ## 📞 Support

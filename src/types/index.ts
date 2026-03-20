@@ -404,5 +404,44 @@ export interface UpdateNewsletterSubscriberRequest {
   isActive: boolean;
 }
 
+// Contact Message Types
+export interface IContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+  isRead: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type ContactMessageCreationAttributes = Omit<IContactMessage, 'id' | 'createdAt' | 'updatedAt' | 'isRead'> & {
+  isRead?: boolean;
+};
+
+export interface CreateContactMessageRequest {
+  name: string;
+  email: string;
+  phone?: string;
+  message: string;
+}
+
+export interface UpdateContactMessageRequest {
+  isRead: boolean;
+}
+
+export interface ContactMessageQueryOptions extends PaginationQuery {
+  isRead?: boolean;
+  search?: string;
+}
+
+export interface ContactMessageListResult {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  contactMessages: IContactMessage[];
+}
+
 // Partner Types
 export * from './partner.types';

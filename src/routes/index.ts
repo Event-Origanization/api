@@ -10,6 +10,7 @@ import homeVideoRoutes from "./home-video.routes";
 import newsletterRoutes from "./newsletter-subscriber.routes";
 import dashboardRoutes from "./dashboard.route";
 import partnerRoutes from "./partner.routes";
+import contactMessageRoutes from "./contactMessage.routes";
 
 import { ROUTES } from "@/constants";
 
@@ -36,5 +37,6 @@ router.use(ROUTES.HOME_VIDEOS, homeVideoRoutes);
 router.use(ROUTES.NEWSLETTER, newsletterRoutes);
 router.use(ROUTES.DASHBOARD, dashboardRoutes);
 router.use(ROUTES.PARTNERS, partnerRoutes);
+router.use(ROUTES.CONTACT_MESSAGES, contactMessageRoutes);
 
 export default router;

@@ -97,9 +97,9 @@ export const login = asyncHandler(
       );
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes("Invalid email or password")) {
+        if (error.message.includes("Sai tài khoản hoặc mật khẩu")) {
           sendValidationErrorResponse(res, error.message);
-        } else if (error.message.includes("not activated")) {
+        } else if (error.message.includes("Tài khoản chưa được xác thực")) {
           sendErrorResponse(res, error.message, HTTP_STATUS.FORBIDDEN);
         } else {
           sendErrorResponse(res, error.message, HTTP_STATUS.BAD_REQUEST);
