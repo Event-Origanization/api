@@ -6,6 +6,8 @@ export const PAGE_KEYS = {
   SOUND_LIGHT: 'SOUND_LIGHT',
   RENTAL: 'RENTAL',
   CONTACT: 'CONTACT',
+  POST_DETAIL: 'POST_DETAIL',
+  PRODUCT_DETAIL: 'PRODUCT_DETAIL',
 } as const;
 
 export type PageKey = keyof typeof PAGE_KEYS;

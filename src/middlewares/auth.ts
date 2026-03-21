@@ -90,7 +90,13 @@ export const optionalAuth = async (
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
-    const token = JWTUtils.extractTokenFromHeader(authHeader);
+    let token = JWTUtils.extractTokenFromHeader(authHeader);
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (!token && (req as any).cookies?.access_token) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      token = (req as any).cookies.access_token;
+    }
 
     if (token) {
       const decoded = JWTUtils.verifyAccessToken(token);

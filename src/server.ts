@@ -23,6 +23,7 @@ import {
   performanceMonitor,
 } from "./middlewares/logger";
 import { ENV, Logger } from "./lib";
+import { CronService } from "./services/cron.service";
 
 const app = express();
 const server = createServer(app);
@@ -125,6 +126,9 @@ const connectAndStart = async () => {
   // 1. Database connection
   await sequelize.authenticate();
   Logger.info("Database connected successfully");
+
+  // 2. Initialize Cron Jobs
+  CronService.init();
 
   if (ENV.NODE_ENV === "development") {
     // await sequelize.sync({ alter: true });

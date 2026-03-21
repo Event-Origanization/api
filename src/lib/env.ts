@@ -47,4 +47,6 @@ export const ENV = {
   HOST: process.env["HOST"],
 
   GOOGLE_TRANSLATE_URL: process.env["GOOGLE_TRANSLATE_URL"] || "https://translate.googleapis.com/translate_a/single",
+  GEMINI_API_KEY: process.env["GEMINI_API_KEY"],
+  GEMINI_MODEL: process.env["GEMINI_MODEL"] || "gemini-2.5-flash-lite",
 };

@@ -1,4 +1,5 @@
 import { SAME_SITE_OPTIONS } from '@/constants';
+import { PAGE_KEYS } from '@/constants/seo';
 import { Request } from 'express';
 import { Options } from 'sequelize';
 
@@ -41,6 +42,7 @@ export interface IProduct {
   images: string[];
   variants: Record<string, unknown>[];
   isActive: boolean;
+  productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +58,7 @@ export interface ProductCreationAttributes {
   images?: string[];
   variants?: Record<string, unknown>[];
   isActive?: boolean;
+  productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
 }
 
 export interface CreateProductRequest extends ProductCreationAttributes {
@@ -81,7 +84,8 @@ export interface IPost {
   status: string;
   publishAt: Date | null;
   seoScore: number | null;
-  seoFeedback: string | null;
+  seoAnalysis: string | null;
+  seoSuggestions: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -97,7 +101,8 @@ export interface PostCreationAttributes {
   status?: string;
   publishAt?: Date | null;
   seoScore?: number | null;
-  seoFeedback?: string | null;
+  seoAnalysis?: string | null;
+  seoSuggestions?: string | null;
 }
 
 export interface CreatePostRequest extends PostCreationAttributes {

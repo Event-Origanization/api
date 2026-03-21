@@ -14,6 +14,7 @@ export class PostService {
     status?: string;
     sortBy?: string;
     sortOrder?: 'ASC' | 'DESC';
+    isAdmin?: boolean;
   }) {
     const {
       page = 1,
@@ -22,6 +23,7 @@ export class PostService {
       status,
       sortBy = 'createdAt',
       sortOrder = 'DESC',
+      isAdmin = false,
     } = query;
 
     const offset = (page - 1) * limit;
@@ -41,6 +43,17 @@ export class PostService {
     // Filter by status
     if (status !== undefined) {
       where.status = status;
+    }
+
+    // Public users can only see published posts that are not scheduled for future
+    if (!isAdmin) {
+      where.status = 'PUBLISHED';
+      Object.assign(where, {
+        [Op.or]: [
+          { publishAt: null },
+          { publishAt: { [Op.lte]: new Date() } },
+        ],
+      });
     }
 
     const { count, rows } = await Post.findAndCountAll({
@@ -68,8 +81,20 @@ export class PostService {
   /**
    * Get post by slug
    */
-  async getPostBySlug(slug: string) {
-    return await Post.findOne({ where: { slug } });
+  async getPostBySlug(slug: string, isAdmin: boolean = false) {
+    const where: WhereOptions<IPost> = { slug };
+
+    if (!isAdmin) {
+      where.status = 'PUBLISHED';
+      Object.assign(where, {
+        [Op.or]: [
+          { publishAt: null },
+          { publishAt: { [Op.lte]: new Date() } },
+        ],
+      });
+    }
+
+    return await Post.findOne({ where });
   }
 
   /**
