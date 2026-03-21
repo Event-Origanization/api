@@ -1,7 +1,13 @@
-import { Op, WhereOptions } from 'sequelize';
-import { Product } from '@/models/Product';
-import { ProductCreationAttributes, IProduct, CreateProductRequest, UpdateProductRequest } from '@/types';
-import { TranslationService } from './translation.service';
+import { Op, WhereOptions } from "sequelize";
+import { Product } from "@/models/Product";
+import {
+  ProductCreationAttributes,
+  IProduct,
+  CreateProductRequest,
+  UpdateProductRequest,
+} from "@/types";
+import { TranslationService } from "./translation.service";
+import { PAGE_KEYS } from "@/constants/seo";
 
 export class ProductService {
   /**
@@ -14,8 +20,9 @@ export class ProductService {
     minPrice?: number;
     maxPrice?: number;
     isActive?: boolean;
+    productType?: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
     sortBy?: string;
-    sortOrder?: 'ASC' | 'DESC';
+    sortOrder?: "ASC" | "DESC";
   }) {
     const {
       page = 1,
@@ -24,8 +31,9 @@ export class ProductService {
       minPrice,
       maxPrice,
       isActive,
-      sortBy = 'createdAt',
-      sortOrder = 'DESC',
+      productType,
+      sortBy = "created_at", // Use actual DB column name, not alias
+      sortOrder = "DESC",
     } = query;
 
     const offset = (page - 1) * limit;
@@ -55,7 +63,15 @@ export class ProductService {
       where.isActive = isActive;
     }
 
-    const { count, rows } = await Product.findAndCountAll({
+    // Filter by product type
+    if (productType !== undefined) {
+      where.productType = productType;
+    }
+
+    // Run count and data queries separately to minimize memory usage
+    const count = await Product.count({ where });
+
+    const rows = await Product.findAll({
       where,
       limit,
       offset,
@@ -94,9 +110,11 @@ export class ProductService {
       data.name_en = en;
       data.name_zh = zh;
     }
-    
+
     if (data.translateContent !== false && data.content_vi) {
-      const { en, zh } = await TranslationService.translateToAll(data.content_vi);
+      const { en, zh } = await TranslationService.translateToAll(
+        data.content_vi,
+      );
       data.content_en = en;
       data.content_zh = zh;
     }
@@ -125,7 +143,8 @@ export class ProductService {
       // Không thay đổi name_vi, nhưng DB đang thiếu bản dịch (do trước đó lỗi hoặc tạo từ cũ)
       const textToTranslate = data.name_vi || product.name_vi;
       if (textToTranslate) {
-        const { en, zh } = await TranslationService.translateToAll(textToTranslate);
+        const { en, zh } =
+          await TranslationService.translateToAll(textToTranslate);
         if (!product.name_en) data.name_en = en;
         if (!product.name_zh) data.name_zh = zh;
       }
@@ -134,14 +153,17 @@ export class ProductService {
     // Xử lý dịch Nội dung sản phẩm
     if (data.translateContent && data.content_vi) {
       // Có yêu cầu dịch mới do content_vi thay đổi
-      const { en, zh } = await TranslationService.translateToAll(data.content_vi);
+      const { en, zh } = await TranslationService.translateToAll(
+        data.content_vi,
+      );
       data.content_en = en;
       data.content_zh = zh;
     } else if (!product.content_en || !product.content_zh) {
       // Không thay đổi content_vi, nhưng DB đang thiếu bản dịch
       const textToTranslate = data.content_vi || product.content_vi;
       if (textToTranslate) {
-        const { en, zh } = await TranslationService.translateToAll(textToTranslate);
+        const { en, zh } =
+          await TranslationService.translateToAll(textToTranslate);
         if (!product.content_en) data.content_en = en;
         if (!product.content_zh) data.content_zh = zh;
       }

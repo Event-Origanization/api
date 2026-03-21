@@ -1,6 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '@/config/database';
 import { IProduct, ProductCreationAttributes } from '@/types';
+import { PAGE_KEYS } from '@/constants/seo';
 
 export class Product extends Model<IProduct, ProductCreationAttributes> {
   public id!: number;
@@ -15,6 +16,7 @@ export class Product extends Model<IProduct, ProductCreationAttributes> {
   public images!: string[];
   public variants!: Record<string, unknown>[];
   public isActive!: boolean;
+  public productType!: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -75,6 +77,11 @@ Product.init(
       allowNull: false,
       defaultValue: true,
     },
+    productType: {
+      type: DataTypes.ENUM(PAGE_KEYS.SOUND_LIGHT, PAGE_KEYS.RENTAL),
+      allowNull: false,
+      defaultValue: PAGE_KEYS.RENTAL,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -88,6 +95,12 @@ Product.init(
     sequelize,
     tableName: 'products',
     modelName: 'Product',
+    indexes: [
+      { fields: ['productType'] },
+      { fields: ['isActive'] },
+      { fields: ['productType', 'isActive'] },
+      { fields: ['createdAt'] },
+    ]
   }
 );
 

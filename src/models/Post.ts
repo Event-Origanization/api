@@ -16,7 +16,8 @@ export class Post extends Model<IPost, PostCreationAttributes> {
   public status!: string;
   public publishAt!: Date | null;
   public seoScore!: number | null;
-  public seoFeedback!: string | null;
+  public seoAnalysis!: string | null;
+  public seoSuggestions!: string | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -74,7 +75,11 @@ Post.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    seoFeedback: {
+    seoAnalysis: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    seoSuggestions: {
       type: DataTypes.TEXT,
       allowNull: true,
     },

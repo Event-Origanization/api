@@ -1,11 +1,15 @@
 import { Request, Response } from 'express';
 import { postService } from '@/services/post.service';
-import { CreatePostRequest, UpdatePostRequest } from '@/types';
+import { AIService } from '@/services/ai.service';
+import { CreatePostRequest, UpdatePostRequest, AuthenticatedRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
-import { HTTP_STATUS } from '@/constants';
+import { HTTP_STATUS, USER_ROLES, POST_STATUS } from '@/constants';
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
+    const authReq = req as AuthenticatedRequest;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+
     const {
       page,
       limit,
@@ -19,9 +23,10 @@ export const getAllPosts = async (req: Request, res: Response) => {
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
       search: search as string,
-      status: status as string,
+      status: isAdmin ? (status as string) : POST_STATUS.PUBLISHED,
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'ASC' | 'DESC',
+      isAdmin: !!isAdmin,
     });
 
     return sendSuccessResponse(res, result, 'Lấy danh sách bài viết thành công');
@@ -60,11 +65,14 @@ export const getPostById = async (req: Request, res: Response) => {
 
 export const getPostBySlug = async (req: Request, res: Response) => {
   try {
+    const authReq = req as AuthenticatedRequest;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+
     const { slug } = req.params;
     if (!slug) {
       return sendErrorResponse(res, 'Thiếu slug bài viết', HTTP_STATUS.BAD_REQUEST);
     }
-    const post = await postService.getPostBySlug(slug);
+    const post = await postService.getPostBySlug(slug, !!isAdmin);
 
     if (!post) {
       return sendErrorResponse(res, 'Không tìm thấy bài viết', HTTP_STATUS.NOT_FOUND);
@@ -137,6 +145,27 @@ export const deletePost = async (req: Request, res: Response) => {
     return sendErrorResponse(
       res,
       'Lỗi khi xóa bài viết',
+      HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      (error as Error).message
+    );
+  }
+};
+
+export const scoreSeo = async (req: Request, res: Response) => {
+  try {
+    const { title, slug, content } = req.body;
+    
+    if (!title || !content) {
+      return sendErrorResponse(res, 'Tiêu đề và nội dung không được để trống khi chấm điểm SEO', HTTP_STATUS.BAD_REQUEST);
+    }
+
+    const result = await AIService.scoreSeo({ title, slug, content });
+    
+    return sendSuccessResponse(res, result, 'Chấm điểm SEO thành công');
+  } catch (error) {
+    return sendErrorResponse(
+      res,
+      'Lỗi khi chấm điểm SEO bài viết',
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );

@@ -78,6 +78,30 @@ module.exports = {
         path: '/contact',
         created_at: new Date(),
         updated_at: new Date()
+      },
+      {
+        page_key: 'POST_DETAIL',
+        title_vi: 'Chi tiết bài viết | 5P Event',
+        title_en: 'Post Details | 5P Event',
+        title_zh: '文章详情 | 5P Event',
+        description_vi: 'Xem chi tiết bài viết, tin tức sự kiện từ 5P Event.',
+        description_en: 'View post details, event news from 5P Event.',
+        description_zh: '查看文章详情，来自 5P Event 的活动新闻。',
+        path: '/post/:slug',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        page_key: 'PRODUCT_DETAIL',
+        title_vi: 'Chi tiết sản phẩm | 5P Event',
+        title_en: 'Product Details | 5P Event',
+        title_zh: '产品详情 | 5P Event',
+        description_vi: 'Xem chi tiết sản phẩm, dịch vụ sự kiện từ 5P Event.',
+        description_en: 'View product details, event services from 5P Event.',
+        description_zh: '查看产品详情，来自 5P Event 的活动服务。',
+        path: '/product/:slug',
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ];
 

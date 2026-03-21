@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { productService } from '@/services/product.service';
 import { CreateProductRequest, UpdateProductRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
+import { PAGE_KEYS } from '@/constants/seo';
 import { HTTP_STATUS } from '@/constants';
 
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -13,6 +14,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       minPrice,
       maxPrice,
       isActive,
+      productType,
       sortBy,
       sortOrder,
     } = req.query;
@@ -24,6 +26,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
       maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
       isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
+      productType: productType as typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL,
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'ASC' | 'DESC',
     });
