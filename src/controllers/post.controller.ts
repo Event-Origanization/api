@@ -4,6 +4,7 @@ import { AIService } from '@/services/ai.service';
 import { CreatePostRequest, UpdatePostRequest, AuthenticatedRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
 import { HTTP_STATUS, USER_ROLES, POST_STATUS } from '@/constants';
+import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
@@ -92,6 +93,15 @@ export const getPostBySlug = async (req: Request, res: Response) => {
 export const createPost = async (req: Request, res: Response) => {
   try {
     const body: CreatePostRequest = req.body;
+    
+    // Handle image upload to Cloudinary if a file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'posts');
+      if (uploadResult.success && uploadResult.url) {
+        body.media = uploadResult.url;
+      }
+    }
+    
     const newPost = await postService.createPost(body);
     return sendSuccessResponse(res, newPost, 'Tạo bài viết mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
@@ -111,12 +121,27 @@ export const updatePost = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Thiếu ID bài viết', HTTP_STATUS.BAD_REQUEST);
     }
     const body: UpdatePostRequest = req.body;
-    const updatedPost = await postService.updatePost(parseInt(id), body);
-
-    if (!updatedPost) {
+    
+    // Check if post exists for potential image management
+    const existingPost = await postService.getPostById(parseInt(id));
+    if (!existingPost) {
       return sendErrorResponse(res, 'Không tìm thấy bài viết để cập nhật', HTTP_STATUS.NOT_FOUND);
     }
 
+    // Handle image upload to Cloudinary if a new file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'posts');
+      if (uploadResult.success && uploadResult.url) {
+        // Optionally delete the old image if it was on Cloudinary
+        if (existingPost.media && existingPost.media.includes('cloudinary')) {
+          await deleteImageByUrl(existingPost.media);
+        }
+        body.media = uploadResult.url;
+      }
+    }
+    
+    const updatedPost = await postService.updatePost(parseInt(id), body);
+    
     return sendSuccessResponse(res, updatedPost, 'Cập nhật bài viết thành công');
   } catch (error) {
     return sendErrorResponse(

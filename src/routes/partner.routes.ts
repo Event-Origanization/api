@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as PartnerController from '@/controllers/partner.controller';
 import { PARTNER_ROUTES } from '@/constants/routes';
 import { authenticateToken, requireAdmin } from '@/middlewares/auth';
+import { uploadSingleWithError } from '@/utils/multer';
 
 const router = Router();
 
@@ -11,8 +12,8 @@ router.get(PARTNER_ROUTES.GET_ACTIVE, PartnerController.getActivePartners);
 // Admin routes (require auth)
 router.get(PARTNER_ROUTES.GET_ALL, authenticateToken, requireAdmin, PartnerController.getAllPartners);
 router.get(PARTNER_ROUTES.GET_BY_ID, authenticateToken, requireAdmin, PartnerController.getPartnerById);
-router.post(PARTNER_ROUTES.CREATE, authenticateToken, requireAdmin, PartnerController.createPartner);
-router.put(PARTNER_ROUTES.UPDATE, authenticateToken, requireAdmin, PartnerController.updatePartner);
+router.post(PARTNER_ROUTES.CREATE, authenticateToken, requireAdmin, uploadSingleWithError('image'), PartnerController.createPartner);
+router.put(PARTNER_ROUTES.UPDATE, authenticateToken, requireAdmin, uploadSingleWithError('image'), PartnerController.updatePartner);
 router.delete(PARTNER_ROUTES.DELETE, authenticateToken, requireAdmin, PartnerController.deletePartner);
 
 export default router;

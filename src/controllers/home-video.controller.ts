@@ -3,6 +3,7 @@ import { homeVideoService } from '@/services/home-video.service';
 import { CreateHomeVideoRequest, UpdateHomeVideoRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
 import { HTTP_STATUS } from '@/constants';
+import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
 
 export const getAllHomeVideos = async (req: Request, res: Response) => {
   try {
@@ -61,6 +62,15 @@ export const getHomeVideoById = async (req: Request, res: Response) => {
 export const createHomeVideo = async (req: Request, res: Response) => {
   try {
     const body: CreateHomeVideoRequest = req.body;
+    
+    // Handle image upload to Cloudinary if a file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'home-videos');
+      if (uploadResult.success && uploadResult.url) {
+        body.thumbnail = uploadResult.url;
+      }
+    }
+    
     const newVideo = await homeVideoService.createHomeVideo(body);
     return sendSuccessResponse(res, newVideo, 'Tạo video trang chủ mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
@@ -80,12 +90,27 @@ export const updateHomeVideo = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Thiếu ID video', HTTP_STATUS.BAD_REQUEST);
     }
     const body: UpdateHomeVideoRequest = req.body;
-    const updatedVideo = await homeVideoService.updateHomeVideo(parseInt(id), body);
-
-    if (!updatedVideo) {
+    
+    // Check if video exists for potential image management
+    const existingVideo = await homeVideoService.getHomeVideoById(parseInt(id));
+    if (!existingVideo) {
       return sendErrorResponse(res, 'Không tìm thấy video để cập nhật', HTTP_STATUS.NOT_FOUND);
     }
 
+    // Handle image upload to Cloudinary if a new file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'home-videos');
+      if (uploadResult.success && uploadResult.url) {
+        // Optionally delete the old image if it was on Cloudinary
+        if (existingVideo.thumbnail && existingVideo.thumbnail.includes('cloudinary')) {
+          await deleteImageByUrl(existingVideo.thumbnail);
+        }
+        body.thumbnail = uploadResult.url;
+      }
+    }
+    
+    const updatedVideo = await homeVideoService.updateHomeVideo(parseInt(id), body);
+    
     return sendSuccessResponse(res, updatedVideo, 'Cập nhật video thành công');
   } catch (error) {
     return sendErrorResponse(
