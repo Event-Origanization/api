@@ -15,6 +15,7 @@ export const ROUTES = {
   DASHBOARD: '/dashboard',
   PARTNERS: '/partners',
   CONTACT_MESSAGES: '/contact-messages',
+  UPLOAD: '/upload',
 } as const;
 
 // Product Route Paths

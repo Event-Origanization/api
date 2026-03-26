@@ -3,6 +3,7 @@ import { partnerService } from '@/services/partner.service';
 import { CreatePartnerRequest, UpdatePartnerRequest, PartnerQueryOptions } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
 import { HTTP_STATUS } from '@/constants';
+import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
 
 export const getAllPartners = async (req: Request, res: Response) => {
   try {
@@ -74,6 +75,14 @@ export const createPartner = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Tên đối tác không được để trống', HTTP_STATUS.BAD_REQUEST);
     }
 
+    // Handle image upload to Cloudinary if a file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'partners');
+      if (uploadResult.success && uploadResult.url) {
+        body.logo = uploadResult.url;
+      }
+    }
+
     const newPartner = await partnerService.createPartner(body);
     return sendSuccessResponse(res, newPartner, 'Tạo đối tác mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
@@ -94,12 +103,27 @@ export const updatePartner = async (req: Request, res: Response) => {
     }
 
     const body: UpdatePartnerRequest = req.body;
-    const updatedPartner = await partnerService.updatePartner(parseInt(id, 10), body);
 
-    if (!updatedPartner) {
+    // Check if partner exists for potential image management
+    const existingPartner = await partnerService.getPartnerById(parseInt(id, 10));
+    if (!existingPartner) {
       return sendErrorResponse(res, 'Không tìm thấy đối tác để cập nhật', HTTP_STATUS.NOT_FOUND);
     }
 
+    // Handle image upload to Cloudinary if a new file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'partners');
+      if (uploadResult.success && uploadResult.url) {
+        // Optionally delete the old image if it was on Cloudinary
+        if (existingPartner.logo && existingPartner.logo.includes('cloudinary')) {
+          await deleteImageByUrl(existingPartner.logo);
+        }
+        body.logo = uploadResult.url;
+      }
+    }
+
+    const updatedPartner = await partnerService.updatePartner(parseInt(id, 10), body);
+    
     return sendSuccessResponse(res, updatedPartner, 'Cập nhật đối tác thành công');
   } catch (error) {
     return sendErrorResponse(

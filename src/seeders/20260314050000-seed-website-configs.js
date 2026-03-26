@@ -122,9 +122,9 @@ module.exports = {
       {
         key: 'MENU_EVENTS',
         group: 'MENU',
-        value_vi: 'Tổ chức sự kiện',
-        value_en: 'Event Organization',
-        value_zh: '活动策划',
+        value_vi: 'Dự án thực hiện',
+        value_en: 'Projects',
+        value_zh: '项目',
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -140,9 +140,18 @@ module.exports = {
       {
         key: 'MENU_RENTAL',
         group: 'MENU',
-        value_vi: 'Cho thuê thiết bị sự kiện',
-        value_en: 'Event Equipment Rental',
-        value_zh: '活动设备租赁',
+        value_vi: 'Thiết bị sự kiện',
+        value_en: 'Event Equipment',
+        value_zh: '活动设备',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        key: 'MENU_NEWS',
+        group: 'MENU',
+        value_vi: 'Tin tức',
+        value_en: 'News',
+        value_zh: '新闻',
         created_at: new Date(),
         updated_at: new Date()
       },

@@ -4,6 +4,7 @@ import { CreateProductRequest, UpdateProductRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
 import { PAGE_KEYS } from '@/constants/seo';
 import { HTTP_STATUS } from '@/constants';
+import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -91,6 +92,15 @@ export const getProductBySlug = async (req: Request, res: Response) => {
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const body: CreateProductRequest = req.body;
+    
+    // Handle image upload to Cloudinary if a file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'products');
+      if (uploadResult.success && uploadResult.url) {
+        body.images = [uploadResult.url];
+      }
+    }
+    
     const newProduct = await productService.createProduct(body);
     return sendSuccessResponse(res, newProduct, 'Tạo sản phẩm mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
@@ -110,12 +120,30 @@ export const updateProduct = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Thiếu ID sản phẩm', HTTP_STATUS.BAD_REQUEST);
     }
     const body: UpdateProductRequest = req.body;
-    const updatedProduct = await productService.updateProduct(parseInt(id), body);
-
-    if (!updatedProduct) {
+    
+    // Check if product exists first for potential image management
+    const existingProduct = await productService.getProductById(parseInt(id));
+    if (!existingProduct) {
       return sendErrorResponse(res, 'Không tìm thấy sản phẩm để cập nhật', HTTP_STATUS.NOT_FOUND);
     }
 
+    // Handle image upload to Cloudinary if a new file was provided
+    if (req.file) {
+      const uploadResult = await uploadImage(req.file.buffer, 'products');
+      if (uploadResult.success && uploadResult.url) {
+        // Optionially delete the old image if any
+        if (existingProduct.images && existingProduct.images.length > 0) {
+          const oldImage = existingProduct.images[0];
+          if (oldImage && oldImage.includes('cloudinary')) {
+            await deleteImageByUrl(oldImage);
+          }
+        }
+        body.images = [uploadResult.url];
+      }
+    }
+    
+    const updatedProduct = await productService.updateProduct(parseInt(id), body);
+    
     return sendSuccessResponse(res, updatedProduct, 'Cập nhật sản phẩm thành công');
   } catch (error) {
     return sendErrorResponse(
