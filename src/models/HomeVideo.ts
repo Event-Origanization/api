@@ -7,7 +7,7 @@ export class HomeVideo extends Model<IHomeVideo, HomeVideoCreationAttributes> {
   public title_vi!: string;
   public title_en!: string;
   public title_zh!: string;
-  public url!: string;
+  public url!: string | null;
   public thumbnail!: string | null;
   public isActive!: boolean;
   public readonly createdAt!: Date;
@@ -35,7 +35,7 @@ HomeVideo.init(
     },
     url: {
       type: DataTypes.STRING(255),
-      allowNull: false,
+      allowNull: true,
     },
     thumbnail: {
       type: DataTypes.TEXT('long'),

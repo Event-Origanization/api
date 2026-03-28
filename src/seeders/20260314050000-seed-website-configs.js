@@ -35,6 +35,15 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        key: 'SYSTEM_FONT',
+        group: 'GENERAL',
+        value_vi: 'Outfit',
+        value_en: 'Outfit',
+        value_zh: 'Outfit',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
       // CONTACT
       {
         key: 'CONTACT_HOTLINE',
@@ -110,15 +119,15 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
-      {
-        key: 'MENU_ABOUT',
-        group: 'MENU',
-        value_vi: 'Giới thiệu',
-        value_en: 'About Us',
-        value_zh: '关于我们',
-        created_at: new Date(),
-        updated_at: new Date()
-      },
+      // {
+      //   key: 'MENU_ABOUT',
+      //   group: 'MENU',
+      //   value_vi: 'Giới thiệu',
+      //   value_en: 'About Us',
+      //   value_zh: '关于我们',
+      //   created_at: new Date(),
+      //   updated_at: new Date()
+      // },
       {
         key: 'MENU_EVENTS',
         group: 'MENU',

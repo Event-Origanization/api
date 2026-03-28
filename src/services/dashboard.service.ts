@@ -1,4 +1,4 @@
-import { Product, Post, HighlightVideo, NewsletterSubscriber } from '@/models';
+import { Product, Post, HighlightVideo, ContactMessage } from '@/models';
 import { POST_STATUS } from '@/constants';
 import { Op } from 'sequelize';
 
@@ -20,7 +20,7 @@ export const dashboardService = {
       Product.count(),
       Post.count(),
       HighlightVideo.count(),
-      NewsletterSubscriber.count(),
+      ContactMessage.count(),
       Product.count({ where: { isActive: true } }),
       Product.count({ where: { isActive: false } }),
       Post.count({ where: { status: POST_STATUS.PUBLISHED } }),
@@ -31,8 +31,8 @@ export const dashboardService = {
         order: [['createdAt', 'DESC']],
         limit: 5,
       }),
-      NewsletterSubscriber.findAll({
-        attributes: ['id', 'email', 'isActive', 'createdAt'],
+      ContactMessage.findAll({
+        attributes: ['id', 'name', 'email', 'isRead', 'createdAt'],
         order: [['createdAt', 'DESC']],
         limit: 5,
       }),
@@ -42,7 +42,7 @@ export const dashboardService = {
       products,
       posts,
       highlightVideos,
-      subscribers,
+      contactMessages: subscribers,
       productStats: {
         active: activeProducts,
         inactive: inactiveProducts,
@@ -53,7 +53,7 @@ export const dashboardService = {
         scheduled: scheduledPosts,
       },
       recentProducts,
-      recentSubscribers,
+      recentContactMessages: recentSubscribers,
     };
   },
 
@@ -84,7 +84,7 @@ export const dashboardService = {
         attributes: ['createdAt'],
         where: whereClause,
       }),
-      NewsletterSubscriber.findAll({
+      ContactMessage.findAll({
         attributes: ['createdAt'],
         where: whereClause,
       }),
@@ -116,7 +116,7 @@ export const dashboardService = {
         posts: postMonthly,
       },
       lineChart: {
-        subscribers: subscriberMonthly,
+        contactMessages: subscriberMonthly,
       },
     };
   },

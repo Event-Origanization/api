@@ -93,12 +93,16 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const body: CreateProductRequest = req.body;
     
-    // Handle image upload to Cloudinary if a file was provided
-    if (req.file) {
-      const uploadResult = await uploadImage(req.file.buffer, 'products');
-      if (uploadResult.success && uploadResult.url) {
-        body.images = [uploadResult.url];
+    // Handle multiple image uploads to Cloudinary
+    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+      const uploadedUrls: string[] = [];
+      for (const file of req.files) {
+        const uploadResult = await uploadImage(file.buffer, 'products');
+        if (uploadResult.success && uploadResult.url) {
+          uploadedUrls.push(uploadResult.url);
+        }
       }
+      body.images = uploadedUrls;
     }
     
     const newProduct = await productService.createProduct(body);
@@ -127,20 +131,43 @@ export const updateProduct = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Không tìm thấy sản phẩm để cập nhật', HTTP_STATUS.NOT_FOUND);
     }
 
-    // Handle image upload to Cloudinary if a new file was provided
-    if (req.file) {
-      const uploadResult = await uploadImage(req.file.buffer, 'products');
-      if (uploadResult.success && uploadResult.url) {
-        // Optionially delete the old image if any
-        if (existingProduct.images && existingProduct.images.length > 0) {
-          const oldImage = existingProduct.images[0];
-          if (oldImage && oldImage.includes('cloudinary')) {
-            await deleteImageByUrl(oldImage);
-          }
+    // Parse existing images if passed as a string/array from frontend
+    let currentImages: string[] = [];
+    if (body.images) {
+      if (typeof body.images === 'string') {
+        try {
+          currentImages = JSON.parse(body.images);
+        } catch (e) {
+          currentImages = [body.images];
         }
-        body.images = [uploadResult.url];
+      } else if (Array.isArray(body.images)) {
+        currentImages = [...body.images];
+      }
+    } else {
+      currentImages = existingProduct.images || [];
+    }
+    
+    // Find old images that were removed in the new request
+    if (existingProduct.images && existingProduct.images.length > 0) {
+      const removedImages = existingProduct.images.filter(img => !currentImages.includes(img));
+      for (const img of removedImages) {
+        if (img && img.includes('cloudinary')) {
+          await deleteImageByUrl(img);
+        }
       }
     }
+
+    // Handle new images upload via req.files
+    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+      for (const file of req.files) {
+        const uploadResult = await uploadImage(file.buffer, 'products');
+        if (uploadResult.success && uploadResult.url) {
+          currentImages.push(uploadResult.url);
+        }
+      }
+    }
+    // Update body.images to final array
+    body.images = currentImages;
     
     const updatedProduct = await productService.updateProduct(parseInt(id), body);
     

@@ -2,6 +2,7 @@ import { SAME_SITE_OPTIONS } from '@/constants';
 import { PAGE_KEYS } from '@/constants/seo';
 import { Request } from 'express';
 import { Options } from 'sequelize';
+import { ConfigGroup, ConfigKey } from '@/constants/config';
 
 export interface DatabaseConfig {
   development: Options;
@@ -35,12 +36,8 @@ export interface IProduct {
   name_en: string;
   name_zh: string;
   slug: string;
-  content_vi: string;
-  content_en: string;
-  content_zh: string;
   price: number;
   images: string[];
-  variants: Record<string, unknown>[];
   isActive: boolean;
   productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
   createdAt: Date;
@@ -51,24 +48,18 @@ export interface ProductCreationAttributes {
   name_en?: string;
   name_zh?: string;
   slug: string;
-  content_vi: string;
-  content_en?: string;
-  content_zh?: string;
   price: number;
   images?: string[];
-  variants?: Record<string, unknown>[];
   isActive?: boolean;
   productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
 }
 
 export interface CreateProductRequest extends ProductCreationAttributes {
   translateName?: boolean;
-  translateContent?: boolean;
 }
 
 export interface UpdateProductRequest extends Partial<ProductCreationAttributes> {
   translateName?: boolean;
-  translateContent?: boolean;
 }
 
 export interface IPost {
@@ -150,7 +141,7 @@ export interface IHomeVideo {
   title_vi: string;
   title_en: string;
   title_zh: string;
-  url: string;
+  url: string | null;
   thumbnail: string | null;
   isActive: boolean;
   createdAt: Date;
@@ -161,7 +152,7 @@ export interface HomeVideoCreationAttributes {
   title_vi: string;
   title_en?: string;
   title_zh?: string;
-  url: string;
+  url?: string | null;
   thumbnail?: string | null;
   isActive?: boolean;
 }
@@ -176,8 +167,8 @@ export interface UpdateHomeVideoRequest extends Partial<HomeVideoCreationAttribu
 
 export interface IWebsiteConfig {
   id: number;
-  key: string;
-  group: string;
+  key: ConfigKey | string;
+  group: ConfigGroup | string;
   value_vi: string;
   value_en: string;
   value_zh: string;

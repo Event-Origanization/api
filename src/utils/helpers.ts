@@ -68,3 +68,17 @@ export const parseExpiresIn = (expiresIn: string): number => {
     default: return 15 * 60 * 1000;
   }
 };
+
+/**
+ * Sanitize a search string to prevent SQL wildcard exploitation and basic XSS
+ * @param search - The raw search string
+ * @returns A safe search string
+ */
+export const sanitizeSearch = (search: string): string => {
+  if (!search) return '';
+  return search
+    .trim()
+    .slice(0, 100) // Limit length to 100 characters
+    .replace(/[<>]/g, '') // Prevent basic XSS by removing < and >
+    .replace(/[%_\\\\]/g, '\\\\$&'); // Escape SQL LIKE wildcards and backslashes
+};

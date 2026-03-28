@@ -2,6 +2,7 @@ import { Op, WhereOptions } from 'sequelize';
 import { Post } from '@/models/Post';
 import { PostCreationAttributes, IPost, CreatePostRequest, UpdatePostRequest } from '@/types';
 import { TranslationService } from './translation.service';
+import { sanitizeSearch } from '@/utils/helpers';
 
 export class PostService {
   /**
@@ -31,7 +32,8 @@ export class PostService {
 
     // Search by title (VI, EN, ZH)
     if (search) {
-      const searchPattern = `%${search}%`;
+      const sanitizedSearch = sanitizeSearch(search);
+      const searchPattern = `%${sanitizedSearch}%`;
       const orConditions: WhereOptions<IPost>[] = [
         { title_vi: { [Op.like]: searchPattern } },
         { title_en: { [Op.like]: searchPattern } },
