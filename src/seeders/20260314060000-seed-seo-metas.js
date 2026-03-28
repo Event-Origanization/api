@@ -19,18 +19,18 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
-      {
-        page_key: 'ABOUT',
-        title_vi: 'Giới thiệu | 5P Event',
-        title_en: 'About Us | 5P Event',
-        title_zh: '关于我们 | 5P Event',
-        description_vi: 'Tìm hiểu về tầm nhìn, sứ mệnh và giá trị cốt lõi của 5P Event.',
-        description_en: 'Learn about the vision, mission, and core values of 5P Event.',
-        description_zh: '了解 5P Event 的愿景、使命和核心价值观。',
-        path: '/about',
-        created_at: new Date(),
-        updated_at: new Date()
-      },
+      // {
+      //   page_key: 'ABOUT',
+      //   title_vi: 'Giới thiệu | 5P Event',
+      //   title_en: 'About Us | 5P Event',
+      //   title_zh: '关于我们 | 5P Event',
+      //   description_vi: 'Tìm hiểu về tầm nhìn, sứ mệnh và giá trị cốt lõi của 5P Event.',
+      //   description_en: 'Learn about the vision, mission, and core values of 5P Event.',
+      //   description_zh: '了解 5P Event 的愿景、使命和核心价值观。',
+      //   path: '/about',
+      //   created_at: new Date(),
+      //   updated_at: new Date()
+      // },
       {
         page_key: 'EVENTS',
         title_vi: 'Dự án thực hiện | 5P Event',

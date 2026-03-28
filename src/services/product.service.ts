@@ -8,6 +8,7 @@ import {
 } from "@/types";
 import { TranslationService } from "./translation.service";
 import { PAGE_KEYS } from "@/constants/seo";
+import { sanitizeSearch } from "@/utils/helpers";
 
 export class ProductService {
   /**
@@ -41,7 +42,8 @@ export class ProductService {
 
     // Search by name (VI, EN, ZH)
     if (search) {
-      const searchPattern = `%${search}%`;
+      const sanitizedSearch = sanitizeSearch(search);
+      const searchPattern = `%${sanitizedSearch}%`;
       const orConditions: WhereOptions<IProduct>[] = [
         { name_vi: { [Op.like]: searchPattern } },
         { name_en: { [Op.like]: searchPattern } },
@@ -111,18 +113,9 @@ export class ProductService {
       data.name_zh = zh;
     }
 
-    if (data.translateContent !== false && data.content_vi) {
-      const { en, zh } = await TranslationService.translateToAll(
-        data.content_vi,
-      );
-      data.content_en = en;
-      data.content_zh = zh;
-    }
-
-    // Loại bỏ các cờ trước khi lưu vào DB
-    const { translateName, translateContent, ...rest } = data;
+    // Loại bỏ cờ trước khi lưu DB
+    const { translateName, ...rest } = data;
     void translateName;
-    void translateContent;
     return await Product.create(rest as ProductCreationAttributes);
   }
 
@@ -150,28 +143,8 @@ export class ProductService {
       }
     }
 
-    // Xử lý dịch Nội dung sản phẩm
-    if (data.translateContent && data.content_vi) {
-      // Có yêu cầu dịch mới do content_vi thay đổi
-      const { en, zh } = await TranslationService.translateToAll(
-        data.content_vi,
-      );
-      data.content_en = en;
-      data.content_zh = zh;
-    } else if (!product.content_en || !product.content_zh) {
-      // Không thay đổi content_vi, nhưng DB đang thiếu bản dịch
-      const textToTranslate = data.content_vi || product.content_vi;
-      if (textToTranslate) {
-        const { en, zh } =
-          await TranslationService.translateToAll(textToTranslate);
-        if (!product.content_en) data.content_en = en;
-        if (!product.content_zh) data.content_zh = zh;
-      }
-    }
-
-    const { translateName, translateContent, ...rest } = data;
+    const { translateName, ...rest } = data;
     void translateName;
-    void translateContent;
     return await product.update(rest);
   }
 

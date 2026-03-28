@@ -105,11 +105,13 @@ process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 // Critical Error Handlers
 // ========================
 process.on("uncaughtException", (err) => {
+  console.error(`Uncaught Exception: ${err.stack || err}`);
   Logger.error(`Uncaught Exception: ${err.stack || err}`);
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason) => {
+  console.error(`Unhandled Rejection: ${reason}`);
   Logger.error(`Unhandled Rejection: ${reason}`);
   process.exit(1);
 });
@@ -192,6 +194,8 @@ const startServer = async () => {
 // ========================
 if (require.main === module) {
   startServer().catch((err) => {
+    console.error(`Fatal error: ${err.message || err}`);
+    if (err.stack) console.error(err.stack);
     Logger.error(`Fatal error: ${err.message || err}`);
     process.exit(1);
   });

@@ -9,12 +9,8 @@ export class Product extends Model<IProduct, ProductCreationAttributes> {
   public name_en!: string;
   public name_zh!: string;
   public slug!: string;
-  public content_vi!: string;
-  public content_en!: string;
-  public content_zh!: string;
   public price!: number;
   public images!: string[];
-  public variants!: Record<string, unknown>[];
   public isActive!: boolean;
   public productType!: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
   public readonly createdAt!: Date;
@@ -45,29 +41,12 @@ Product.init(
       allowNull: false,
       unique: true,
     },
-    content_vi: {
-      type: DataTypes.TEXT('long'),
-      allowNull: false,
-    },
-    content_en: {
-      type: DataTypes.TEXT('long'),
-      allowNull: true,
-    },
-    content_zh: {
-      type: DataTypes.TEXT('long'),
-      allowNull: true,
-    },
     price: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0,
     },
     images: {
-      type: DataTypes.JSON,
-      allowNull: true,
-      defaultValue: [],
-    },
-    variants: {
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: [],
