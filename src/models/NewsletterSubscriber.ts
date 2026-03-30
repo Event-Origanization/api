@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '@/config/database';
 import { INewsletterSubscriber, NewsletterSubscriberCreationAttributes } from '@/types';
 
 export class NewsletterSubscriber extends Model<INewsletterSubscriber, NewsletterSubscriberCreationAttributes> implements INewsletterSubscriber {

@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
+import jwt, { Algorithm, SignOptions } from 'jsonwebtoken';
 import { IUser, TokenPayload, TokenPair, DecodedToken } from '@/types';
-import { JWT_CONSTANTS, MESSAGES } from '@/constants';
-import { ENV } from '../lib';
+import { JWT_CONSTANTS, MESSAGES, TOKEN_EXPIRATION_CONSTANTS } from '@/constants';
+import { ENV } from '@/lib';
 
 export class JWTUtils {
   private static readonly ACCESS_TOKEN_SECRET = ENV.JWT_ACCESS_SECRET || 'your-access-secret-key';
@@ -19,8 +19,8 @@ export class JWTUtils {
     };
 
     return jwt.sign(payload, this.ACCESS_TOKEN_SECRET, {
-      expiresIn: JWT_CONSTANTS.ACCESS_TOKEN_EXPIRES_IN,
-      algorithm: JWT_CONSTANTS.ALGORITHM as jwt.Algorithm,
+      expiresIn: JWT_CONSTANTS.ACCESS_TOKEN_EXPIRES_IN as SignOptions['expiresIn'],
+      algorithm: JWT_CONSTANTS.ALGORITHM as Algorithm,
     });
   }
 
@@ -36,8 +36,8 @@ export class JWTUtils {
     };
 
     return jwt.sign(payload, this.REFRESH_TOKEN_SECRET, {
-      expiresIn: JWT_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN,
-      algorithm: JWT_CONSTANTS.ALGORITHM as jwt.Algorithm,
+      expiresIn: JWT_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN as SignOptions['expiresIn'],
+      algorithm: JWT_CONSTANTS.ALGORITHM as Algorithm,
     });
   }
 
@@ -49,7 +49,7 @@ export class JWTUtils {
     const refreshToken = this.generateRefreshToken(user);
 
     // Calculate expiration time in seconds
-    const expiresIn = this.getExpirationTime(JWT_CONSTANTS.ACCESS_TOKEN_EXPIRES_IN);
+    const expiresIn = TOKEN_EXPIRATION_CONSTANTS.ACCESS_TOKEN_EXPIRES_IN;
 
     return {
       accessToken,
@@ -110,26 +110,6 @@ export class JWTUtils {
     }
   }
 
-  /**
-   * Get token expiration time in seconds
-   */
-  private static getExpirationTime(expiresIn: string): number {
-    const timeUnit = expiresIn.slice(-1);
-    const timeValue = parseInt(expiresIn.slice(0, -1));
-
-    switch (timeUnit) {
-      case 's':
-        return timeValue;
-      case 'm':
-        return timeValue * 60;
-      case 'h':
-        return timeValue * 60 * 60;
-      case 'd':
-        return timeValue * 24 * 60 * 60;
-      default:
-        return 24 * 60 * 60; // Default 24 hours
-    }
-  }
 
   /**
    * Extract token from Authorization header

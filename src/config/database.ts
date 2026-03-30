@@ -1,6 +1,6 @@
 import { Options, Sequelize } from "sequelize";
 import { DatabaseConfig } from "@/types";
-import { ENV } from "../lib";
+import { ENV } from "@/lib";
 
 const env = ENV.NODE_ENV || "development";
 

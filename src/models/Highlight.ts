@@ -1,21 +1,21 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '@/config/database';
-import { IHighlightVideo, HighlightVideoCreationAttributes } from '@/types';
+import { IHighlight, HighlightCreationAttributes } from '@/types';
 
-export class HighlightVideo extends Model<IHighlightVideo, HighlightVideoCreationAttributes> {
+export class Highlight extends Model<IHighlight, HighlightCreationAttributes> {
   public id!: number;
   public title_vi!: string;
   public title_en!: string;
   public title_zh!: string;
-  public url!: string;
-  public thumbnail!: string | null;
+  public content_vi!: string;
+  public content_en!: string;
+  public content_zh!: string;
   public orderIndex!: number;
-  public isActive!: boolean;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
 
-HighlightVideo.init(
+Highlight.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -34,11 +34,15 @@ HighlightVideo.init(
       type: DataTypes.STRING(255),
       allowNull: true,
     },
-    url: {
-      type: DataTypes.STRING(255),
+    content_vi: {
+      type: DataTypes.TEXT('long'),
       allowNull: false,
     },
-    thumbnail: {
+    content_en: {
+      type: DataTypes.TEXT('long'),
+      allowNull: true,
+    },
+    content_zh: {
       type: DataTypes.TEXT('long'),
       allowNull: true,
     },
@@ -46,30 +50,27 @@ HighlightVideo.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true,
+      field: 'orderIndex'
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'createdAt'
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
+      field: 'updatedAt'
     },
   },
   {
     sequelize,
-    tableName: 'highlight_videos',
-    modelName: 'HighlightVideo',
+    tableName: 'highlights',
+    modelName: 'Highlight',
     indexes: [
-      { fields: ['isActive'] },
       { fields: ['orderIndex'] }
     ]
   }
 );
 
-export default HighlightVideo;
+export default Highlight;

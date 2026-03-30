@@ -140,9 +140,9 @@ module.exports = {
       {
         key: 'MENU_SOUND_LIGHT',
         group: 'MENU',
-        value_vi: 'Âm thanh ánh sáng',
-        value_en: 'Sound & Lighting',
-        value_zh: '音响灯光',
+        value_vi: '7Seven',
+        value_en: '7Seven',
+        value_zh: '7Seven',
         created_at: new Date(),
         updated_at: new Date()
       },
@@ -152,6 +152,15 @@ module.exports = {
         value_vi: 'Thiết bị sự kiện',
         value_en: 'Event Equipment',
         value_zh: '活动设备',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
+      {
+        key: 'MENU_RENTAL_EVENT',
+        group: 'MENU',
+        value_vi: 'Cho thuê thiết bị sự kiện',
+        value_en: 'Event Equipment Rental',
+        value_zh: '活动设备租赁',
         created_at: new Date(),
         updated_at: new Date()
       },

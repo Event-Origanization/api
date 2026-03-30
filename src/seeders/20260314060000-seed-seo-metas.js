@@ -45,12 +45,12 @@ module.exports = {
       },
       {
         page_key: 'SOUND_LIGHT',
-        title_vi: 'Âm thanh ánh sáng | 5P Event',
-        title_en: 'Sound & Lighting | 5P Event',
-        title_zh: '音响灯光 | 5P Event',
-        description_vi: 'Cung cấp hệ thống âm thanh ánh sáng hiện đại.',
-        description_en: 'Provide modern sound and lighting systems.',
-        description_zh: '提供现代音响灯光系统。',
+        title_vi: '7Seven | Âm thanh ánh sáng chuyên nghiệp',
+        title_en: '7Seven | Professional Sound & Lighting',
+        title_zh: '7Seven | 专业音响灯光',
+        description_vi: '7Seven cung cấp hệ thống âm thanh ánh sáng màn hình LED chuyên nghiệp cho mọi sự kiện.',
+        description_en: '7Seven provides professional sound, lighting, and LED screen systems for all events.',
+        description_zh: '7Seven 为所有活动提供专业的音响、灯光和 LED 屏幕系统。',
         path: '/sound-lighting',
         created_at: new Date(),
         updated_at: new Date()

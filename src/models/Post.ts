@@ -96,6 +96,20 @@ Post.init(
     sequelize,
     tableName: 'posts',
     modelName: 'Post',
+    indexes: [
+      { fields: ['status'] },
+      { fields: ['publishAt'] },
+      { fields: ['createdAt'] },
+      { 
+        name: 'posts_public_composite_index',
+        fields: ['status', 'publishAt', 'createdAt'] 
+      },
+      { 
+        name: 'posts_search_fulltext',
+        type: 'FULLTEXT',
+        fields: ['title_vi', 'title_en', 'title_zh'] 
+      }
+    ]
   }
 );
 

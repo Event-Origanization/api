@@ -43,11 +43,14 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
 export const getPostById = async (req: Request, res: Response) => {
   try {
+    const authReq = req as AuthenticatedRequest;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+
     const { id } = req.params;
     if (!id) {
       return sendErrorResponse(res, 'Thiếu ID bài viết', HTTP_STATUS.BAD_REQUEST);
     }
-    const post = await postService.getPostById(parseInt(id));
+    const post = await postService.getPostById(parseInt(id), !!isAdmin);
 
     if (!post) {
       return sendErrorResponse(res, 'Không tìm thấy bài viết', HTTP_STATUS.NOT_FOUND);
@@ -123,7 +126,7 @@ export const updatePost = async (req: Request, res: Response) => {
     const body: UpdatePostRequest = req.body;
     
     // Check if post exists for potential image management
-    const existingPost = await postService.getPostById(parseInt(id));
+    const existingPost = await postService.getPostById(parseInt(id), true); // True because admin is updating
     if (!existingPost) {
       return sendErrorResponse(res, 'Không tìm thấy bài viết để cập nhật', HTTP_STATUS.NOT_FOUND);
     }

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HTTP_STATUS } from '@/constants';
-import { ENV } from '../lib';
+import { ENV } from '@/lib';
 
 interface CorsOptions {
   origin?: string | string[] | boolean | ((origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => void);

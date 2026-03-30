@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { HTTP_STATUS } from '@/constants';
-import { Logger } from '../lib';
+import { Logger } from '@/lib';
 
 const formatRequest = (method: string, url: string, status: number, time: number, ip: string, msg?: string) => {
   return `${method} ${url} ${status} ${time}ms - ${ip}${msg ? ' - ' + msg : ''}`;

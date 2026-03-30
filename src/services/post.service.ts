@@ -30,16 +30,15 @@ export class PostService {
     const offset = (page - 1) * limit;
     const where: WhereOptions<IPost> = {};
 
-    // Search by title (VI, EN, ZH)
+    // Search by title (VI, EN, ZH) using Full-Text Search
     if (search) {
       const sanitizedSearch = sanitizeSearch(search);
-      const searchPattern = `%${sanitizedSearch}%`;
-      const orConditions: WhereOptions<IPost>[] = [
-        { title_vi: { [Op.like]: searchPattern } },
-        { title_en: { [Op.like]: searchPattern } },
-        { title_zh: { [Op.like]: searchPattern } },
-      ];
-      Object.assign(where, { [Op.or]: orConditions });
+      if (Post.sequelize) {
+        const matchLiteral = Post.sequelize.literal(
+          `MATCH(title_vi, title_en, title_zh) AGAINST(${Post.sequelize.escape(sanitizedSearch)} IN NATURAL LANGUAGE MODE)`
+        );
+        Object.assign(where, { [Op.and]: [matchLiteral] });
+      }
     }
 
     // Filter by status
@@ -76,8 +75,20 @@ export class PostService {
   /**
    * Get post by ID
    */
-  async getPostById(id: number) {
-    return await Post.findByPk(id);
+  async getPostById(id: number, isAdmin: boolean = false) {
+    const where: WhereOptions<IPost> = { id };
+
+    if (!isAdmin) {
+      where.status = 'PUBLISHED';
+      Object.assign(where, {
+        [Op.or]: [
+          { publishAt: null },
+          { publishAt: { [Op.lte]: new Date() } },
+        ],
+      });
+    }
+
+    return await Post.findOne({ where });
   }
 
   /**

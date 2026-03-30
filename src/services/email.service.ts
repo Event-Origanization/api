@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { ENV } from '../lib';
+import { ENV } from '@/lib';
 
 export class EmailService {
   private static transporter: nodemailer.Transporter;

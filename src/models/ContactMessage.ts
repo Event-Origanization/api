@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '@/config/database';
 import { IContactMessage, ContactMessageCreationAttributes } from '@/types';
 
 export class ContactMessage extends Model<IContactMessage, ContactMessageCreationAttributes> implements IContactMessage {

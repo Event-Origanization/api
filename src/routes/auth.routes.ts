@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import {
-  register,
+  // register,
   login,
   logout,
   refreshToken,
@@ -11,30 +11,30 @@ import {
 import { validate } from '@/middlewares/validator';
 import { AUTH_ROUTES } from '@/constants';
 import { extractTokensFromCookies } from '@/middlewares/cookieAuth';
-import { authRateLimiter, generalRateLimiter } from '@/middlewares';
+import { authRateLimiter } from '@/middlewares';
 
 const router = Router();
 
 // Validation chains
-const validateRegister = [
-  body('username')
-    .notEmpty()
-    .isLength({ min: 3, max: 50 })
-    .matches(/^[a-zA-Z0-9_]+$/)
-    .withMessage('Username must be 3-50 characters, alphanumeric and underscore only'),
-  body('email')
-    .notEmpty()
-    .isEmail()
-    .withMessage('Valid email is required'),
-  body('password')
-    .notEmpty()
-    .isLength({ min: 6, max: 255 })
-    .withMessage('Password must be at least 6 characters'),
-  body('image')
-    .optional()
-    .isURL()
-    .withMessage('Image must be a valid URL'),
-];
+// const validateRegister = [
+//   body('username')
+//     .notEmpty()
+//     .isLength({ min: 3, max: 50 })
+//     .matches(/^[a-zA-Z0-9_]+$/)
+//     .withMessage('Username must be 3-50 characters, alphanumeric and underscore only'),
+//   body('email')
+//     .notEmpty()
+//     .isEmail()
+//     .withMessage('Valid email is required'),
+//   body('password')
+//     .notEmpty()
+//     .isLength({ min: 6, max: 255 })
+//     .withMessage('Password must be at least 6 characters'),
+//   body('image')
+//     .optional()
+//     .isURL()
+//     .withMessage('Image must be a valid URL'),
+// ];
 
 const validateLogin = [
   body('email')
@@ -71,12 +71,12 @@ const validateRefreshToken = [
 ];
 
 // POST /api/v1/auth/register - Register new user
-router.post(
-  AUTH_ROUTES.REGISTER,
-  generalRateLimiter,
-  validate(validateRegister),
-  register
-);
+// router.post(
+//   AUTH_ROUTES.REGISTER,
+//   generalRateLimiter,
+//   validate(validateRegister),
+//   register
+// );
 
 
 // POST /api/v1/auth/login - Login user
