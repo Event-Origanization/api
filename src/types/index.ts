@@ -428,8 +428,8 @@ export interface UpdateContactMessageRequest {
 }
 
 export interface ContactMessageQueryOptions extends PaginationQuery {
-  isRead?: boolean;
   search?: string;
+  isRead?: boolean;
 }
 
 export interface ContactMessageListResult {
@@ -437,6 +437,47 @@ export interface ContactMessageListResult {
   totalPages: number;
   currentPage: number;
   contactMessages: IContactMessage[];
+}
+
+// Highlight Types
+export interface IHighlight {
+  id: number;
+  title_vi: string;
+  title_en: string;
+  title_zh: string;
+  content_vi: string;
+  content_en: string;
+  content_zh: string;
+  orderIndex: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface HighlightCreationAttributes {
+  title_vi: string;
+  title_en?: string;
+  title_zh?: string;
+  content_vi: string;
+  content_en?: string;
+  content_zh?: string;
+  orderIndex?: number;
+}
+
+export interface CreateHighlightRequest extends HighlightCreationAttributes {
+  translateTitle?: boolean;
+  translateContent?: boolean;
+}
+
+export interface UpdateHighlightRequest extends Partial<HighlightCreationAttributes> {
+  translateTitle?: boolean;
+  translateContent?: boolean;
+}
+
+export interface HighlightListResult {
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  highlights: IHighlight[];
 }
 
 // Partner Types

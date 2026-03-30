@@ -40,16 +40,15 @@ export class ProductService {
     const offset = (page - 1) * limit;
     const where: WhereOptions<IProduct> = {};
 
-    // Search by name (VI, EN, ZH)
+    // Search by name (VI, EN, ZH) using Full-Text Search
     if (search) {
       const sanitizedSearch = sanitizeSearch(search);
-      const searchPattern = `%${sanitizedSearch}%`;
-      const orConditions: WhereOptions<IProduct>[] = [
-        { name_vi: { [Op.like]: searchPattern } },
-        { name_en: { [Op.like]: searchPattern } },
-        { name_zh: { [Op.like]: searchPattern } },
-      ];
-      Object.assign(where, { [Op.or]: orConditions });
+      if (Product.sequelize) {
+        const matchLiteral = Product.sequelize.literal(
+          `MATCH(name_vi, name_en, name_zh) AGAINST(${Product.sequelize.escape(sanitizedSearch)} IN NATURAL LANGUAGE MODE)`
+        );
+        Object.assign(where, { [Op.and]: [matchLiteral] });
+      }
     }
 
     // Filter by price

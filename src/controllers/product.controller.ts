@@ -137,7 +137,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       if (typeof body.images === 'string') {
         try {
           currentImages = JSON.parse(body.images);
-        } catch (e) {
+        } catch {
           currentImages = [body.images];
         }
       } else if (Array.isArray(body.images)) {

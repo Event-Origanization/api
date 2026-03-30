@@ -79,6 +79,11 @@ Product.init(
       { fields: ['isActive'] },
       { fields: ['productType', 'isActive'] },
       { fields: ['createdAt'] },
+      {
+        name: 'products_search_fulltext',
+        type: 'FULLTEXT',
+        fields: ['name_vi', 'name_en', 'name_zh']
+      }
     ]
   }
 );

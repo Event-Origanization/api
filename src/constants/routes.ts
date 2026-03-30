@@ -6,6 +6,7 @@ export const ROUTES = {
   SEO: '/seo',
   CONFIGS: '/configs',
   PRODUCTS: '/products',
+  HIGHLIGHTS: '/highlights',
   // Health Check
   HEALTH: '/health',
   POSTS: '/posts',
@@ -39,6 +40,7 @@ export const POST_ROUTES = {
   CREATE: '/',
   UPDATE: '/:id',
   DELETE: '/:id',
+  SCORE_SEO: '/score-seo',
 } as const;
 
 
@@ -139,4 +141,10 @@ export const CONTACT_MESSAGE_ROUTES = {
   CREATE: '/',
   MARK_AS_READ: '/:id/read',
   DELETE: '/:id',
+} as const;
+
+// Upload Route Paths
+export const UPLOAD_ROUTES = {
+  BASE: '/',
+  IMAGE: '/image',
 } as const;

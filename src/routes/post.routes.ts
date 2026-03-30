@@ -14,7 +14,7 @@ router.get(POST_ROUTES.GET_BY_SLUG, optionalAuth, PostController.getPostBySlug);
 // Admin only routes
 router.post(POST_ROUTES.CREATE, authenticateToken, requireAdmin, uploadSingleWithError('image'), PostController.createPost);
 router.put(POST_ROUTES.UPDATE, authenticateToken, requireAdmin, uploadSingleWithError('image'), PostController.updatePost);
-router.post('/score-seo', authenticateToken, requireAdmin, PostController.scoreSeo);
+router.post(POST_ROUTES.SCORE_SEO, authenticateToken, requireAdmin, PostController.scoreSeo);
 router.delete(POST_ROUTES.DELETE, authenticateToken, requireAdmin, PostController.deletePost);
 
 export default router;

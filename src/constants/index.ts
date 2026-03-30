@@ -1,4 +1,4 @@
-import { ENV } from '../lib';
+import { ENV } from '@/lib';
 
 // HTTP Status Codes
 export const HTTP_STATUS = {
@@ -122,11 +122,28 @@ export const UPLOAD_CONSTANTS = {
   UPLOAD_PATH: 'uploads',
 } as const;
 
+// Helper to parse duration string to seconds
+const parseDurationToSeconds = (duration: string): number => {
+  const match = duration.match(/^(\d+)([smhd])$/);
+  if (!match) return parseInt(duration) || 0;
+  
+  const value = parseInt(match[1] || '0');
+  const unit = match[2];
+  
+  switch (unit) {
+    case 's': return value;
+    case 'm': return value * 60;
+    case 'h': return value * 60 * 60;
+    case 'd': return value * 24 * 60 * 60;
+    default: return value;
+  }
+};
+
 // JWT Constants
 export const JWT_CONSTANTS = {
-  ACCESS_TOKEN_EXPIRES_IN: '24h',
-  REFRESH_TOKEN_EXPIRES_IN: '7d',
-  ALGORITHM: 'HS256',
+  ACCESS_TOKEN_EXPIRES_IN: ENV.JWT_EXPIRES_IN || '24h',
+  REFRESH_TOKEN_EXPIRES_IN: ENV.JWT_REFRESH_EXPIRES_IN || '7d',
+  ALGORITHM: ENV.JWT_ALGORITHM,
 } as const;
 
 // Pagination Constants
@@ -170,11 +187,11 @@ export const TOKEN_TYPES = {
   REFRESH: 'refresh',
 } as const;
 
-// Token Expiration Constants
+// Token Expiration Constants in seconds
 export const TOKEN_EXPIRATION_CONSTANTS = {
-  ACCESS_TOKEN_EXPIRES_IN: 24 * 60 * 60, // 24 hours
-  REFRESH_TOKEN_EXPIRES_IN: 7 * 24 * 60 * 60, // 7 days
-} as const;
+  ACCESS_TOKEN_EXPIRES_IN: parseDurationToSeconds(JWT_CONSTANTS.ACCESS_TOKEN_EXPIRES_IN),
+  REFRESH_TOKEN_EXPIRES_IN: parseDurationToSeconds(JWT_CONSTANTS.REFRESH_TOKEN_EXPIRES_IN),
+};
 
 // Post Status
 export const POST_STATUS = {
