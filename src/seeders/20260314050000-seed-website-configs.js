@@ -109,6 +109,15 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date()
       },
+      {
+        key: 'SOCIAL_INSTAGRAM',
+        group: 'SOCIAL',
+        value_vi: 'https://instagram.com/5pevent',
+        value_en: 'https://instagram.com/5pevent',
+        value_zh: 'https://instagram.com/5pevent',
+        created_at: new Date(),
+        updated_at: new Date()
+      },
       // MENU
       {
         key: 'MENU_HOME',

@@ -10,9 +10,9 @@ module.exports = {
         content_vi: 'Chúng tôi cung cấp các giải pháp tổ chức sự kiện trọn gói, từ lên ý tưởng đến thực hiện, đảm bảo sự thành công rực rỡ cho mọi sự kiện.',
         content_en: 'We provide comprehensive event organization solutions, from ideation to execution, ensuring brilliant success for every event.',
         content_zh: '我们提供全方位的活动组织 giải pháp, 从构思到执行, 确保每次活动的辉煌成功。',
-        order_index: 1,
-        created_at: new Date(),
-        updated_at: new Date()
+        orderIndex: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
       {
         title_vi: 'ÂM THANH ÁNH SÁNG',
