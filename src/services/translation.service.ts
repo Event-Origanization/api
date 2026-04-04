@@ -23,9 +23,16 @@ export class TranslationService {
     try {
       // Using a publicly available Google Translate endpoint (unofficial)
       // This is for demonstration; for heavy use, replace with Google Cloud Translation API
-      const url = `${ENV.GOOGLE_TRANSLATE_URL}?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+      const url = `${ENV.GOOGLE_TRANSLATE_URL}?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t`;
       
-      const response = await axios.get<GoogleTranslateResponse>(url);
+      const params = new URLSearchParams();
+      params.append('q', text);
+
+      const response = await axios.post<GoogleTranslateResponse>(url, params, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      });
       const data = response.data;
       
       if (data && data[0]) {
