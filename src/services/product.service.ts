@@ -7,8 +7,9 @@ import {
   UpdateProductRequest,
 } from "@/types";
 import { TranslationService } from "./translation.service";
-import { PAGE_KEYS } from "@/constants/seo";
+import { PAGE_KEYS, ProductCategory, CATEGORIES_BY_TYPE } from "@/constants/seo";
 import { sanitizeSearch } from "@/utils/helpers";
+import { Logger } from "@/lib";
 
 export class ProductService {
   /**
@@ -22,6 +23,7 @@ export class ProductService {
     maxPrice?: number;
     isActive?: boolean;
     productType?: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
+    category?: ProductCategory | ProductCategory[];
     sortBy?: string;
     sortOrder?: "ASC" | "DESC";
   }) {
@@ -33,6 +35,7 @@ export class ProductService {
       maxPrice,
       isActive,
       productType,
+      category,
       sortBy = "created_at", // Use actual DB column name, not alias
       sortOrder = "DESC",
     } = query;
@@ -67,6 +70,15 @@ export class ProductService {
     // Filter by product type
     if (productType !== undefined) {
       where.productType = productType;
+    }
+
+    // Filter by category
+    if (category !== undefined) {
+      if (Array.isArray(category)) {
+        where.category = { [Op.in]: category };
+      } else {
+        where.category = category;
+      }
     }
 
     // Run count and data queries separately to minimize memory usage
@@ -105,6 +117,15 @@ export class ProductService {
    * Create new product
    */
   async createProduct(data: CreateProductRequest) {
+    Logger.info(`Bắt đầu tạo sản phẩm mới: ${data.name_vi}`);
+
+    // Kiểm tra slug duy nhất
+    const existingSlug = await Product.findOne({ where: { slug: data.slug } });
+    if (existingSlug) {
+      Logger.error(`Tạo sản phẩm thất bại: Slug "${data.slug}" đã tồn tại (ID: ${existingSlug.id})`);
+      throw new Error(`Slug "${data.slug}" đã tồn tại. Vui lòng chọn slug khác.`);
+    }
+
     // Luôn dịch khi tạo mới nếu không có bản dịch sẵn hoặc được yêu cầu dịch
     if (data.translateName !== false) {
       const { en, zh } = await TranslationService.translateToAll(data.name_vi);
@@ -112,18 +133,58 @@ export class ProductService {
       data.name_zh = zh;
     }
 
-    // Loại bỏ cờ trước khi lưu DB
-    const { translateName, ...rest } = data;
+    // Validate category based on productType
+    if (data.category && data.productType) {
+      const allowedCategories = (CATEGORIES_BY_TYPE as any)[data.productType];
+      if (!allowedCategories || !allowedCategories.includes(data.category)) {
+        Logger.error(`Tạo sản phẩm thất bại: Category ${data.category} không hợp lệ cho loại sản phẩm ${data.productType}`);
+        throw new Error(`Category ${data.category} is not valid for product type ${data.productType}`);
+      }
+    }
+
+    // Loại bỏ cờ và các trường hệ thống trước khi lưu DB
+    const { 
+      translateName, 
+      id: _id, 
+      createdAt: _ca, 
+      updatedAt: _ua, 
+      ...rest 
+    } = data as any;
+
     void translateName;
-    return await Product.create(rest as ProductCreationAttributes);
+    void _id;
+    void _ca;
+    void _ua;
+
+    const newProduct = await Product.create(rest as ProductCreationAttributes);
+    Logger.info(`Tạo sản phẩm mới thành công (ID: ${newProduct.id})`);
+    return newProduct;
   }
 
   /**
    * Update product
    */
   async updateProduct(id: number, data: UpdateProductRequest) {
+    Logger.info(`Bắt đầu cập nhật sản phẩm ID: ${id}`);
     const product = await Product.findByPk(id);
-    if (!product) return null;
+    if (!product) {
+      Logger.warn(`Không tìm thấy sản phẩm ID: ${id} để cập nhật`);
+      return null;
+    }
+
+    // Kiểm tra slug nếu có thay đổi
+    if (data.slug && data.slug !== product.slug) {
+      const existingSlug = await Product.findOne({
+        where: {
+          slug: data.slug,
+          id: { [Op.ne]: id }
+        }
+      });
+      if (existingSlug) {
+        Logger.error(`Cập nhật thất bại: Slug "${data.slug}" đã tồn tại ở sản phẩm khác (ID: ${existingSlug.id})`);
+        throw new Error(`Slug "${data.slug}" đã tồn tại. Vui lòng chọn slug khác.`);
+      }
+    }
 
     // Xử lý dịch Tên sản phẩm
     if (data.translateName && data.name_vi) {
@@ -142,9 +203,35 @@ export class ProductService {
       }
     }
 
-    const { translateName, ...rest } = data;
+    // Validate category based on productType
+    const finalProductType = data.productType || product.productType;
+    const finalCategory = data.category !== undefined ? data.category : product.category;
+    
+    if (finalCategory && finalProductType) {
+      const allowedCategories = (CATEGORIES_BY_TYPE as any)[finalProductType];
+      if (!allowedCategories || !allowedCategories.includes(finalCategory)) {
+        Logger.error(`Cập nhật thất bại: Category ${finalCategory} không hợp lệ cho loại sản phẩm ${finalProductType}`);
+        throw new Error(`Category ${finalCategory} is not valid for product type ${finalProductType}`);
+      }
+    }
+
+    // Loại bỏ các trường hệ thống và cờ trước khi cập nhật
+    const { 
+      translateName, 
+      id: _id, 
+      createdAt: _ca, 
+      updatedAt: _ua, 
+      ...rest 
+    } = data as any;
+    
     void translateName;
-    return await product.update(rest);
+    void _id;
+    void _ca;
+    void _ua;
+
+    const dataUpdate = await product.update(rest);
+    Logger.info(`Cập nhật sản phẩm ID: ${id} thành công`);
+    return dataUpdate;
   }
 
   /**

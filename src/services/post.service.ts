@@ -3,6 +3,7 @@ import { Post } from '@/models/Post';
 import { PostCreationAttributes, IPost, CreatePostRequest, UpdatePostRequest } from '@/types';
 import { TranslationService } from './translation.service';
 import { sanitizeSearch } from '@/utils/helpers';
+import { Logger } from '@/lib';
 
 export class PostService {
   /**
@@ -114,6 +115,15 @@ export class PostService {
    * Create new post
    */
   async createPost(data: CreatePostRequest) {
+    Logger.info(`Bắt đầu tạo bài viết mới: ${data.title_vi}`);
+    
+    // Kiểm tra slug duy nhất
+    const existingSlug = await Post.findOne({ where: { slug: data.slug } });
+    if (existingSlug) {
+      Logger.error(`Tạo bài viết thất bại: Slug "${data.slug}" đã tồn tại (ID: ${existingSlug.id})`);
+      throw new Error(`Slug "${data.slug}" đã tồn tại. Vui lòng chọn slug khác.`);
+    }
+
     // Luôn dịch khi tạo mới nếu không có bản dịch sẵn hoặc được yêu cầu dịch
     if (data.translateTitle !== false) {
       const { en, zh } = await TranslationService.translateToAll(data.title_vi);
@@ -127,19 +137,51 @@ export class PostService {
       data.content_zh = zh;
     }
 
-    // Loại bỏ các cờ trước khi lưu vào DB
-    const { translateTitle, translateContent, ...rest } = data;
+    // Loại bỏ các cờ và trường hệ thống trước khi lưu vào DB
+    const { 
+      translateTitle, 
+      translateContent, 
+      id: _id, 
+      createdAt: _ca, 
+      updatedAt: _ua, 
+      ...rest 
+    } = data as any;
+
     void translateTitle;
     void translateContent;
-    return await Post.create(rest as PostCreationAttributes);
+    void _id;
+    void _ca;
+    void _ua;
+
+    const newPost = await Post.create(rest as PostCreationAttributes);
+    Logger.info(`Tạo bài viết mới thành công (ID: ${newPost.id})`);
+    return newPost;
   }
 
   /**
    * Update post
    */
   async updatePost(id: number, data: UpdatePostRequest) {
+    Logger.info(`Bắt đầu cập nhật bài viết ID: ${id}`);
     const post = await Post.findByPk(id);
-    if (!post) return null;
+    if (!post) {
+      Logger.warn(`Không tìm thấy bài viết ID: ${id} để cập nhật`);
+      return null;
+    }
+
+    // Kiểm tra slug nếu có thay đổi
+    if (data.slug && data.slug !== post.slug) {
+      const existingSlug = await Post.findOne({
+        where: {
+          slug: data.slug,
+          id: { [Op.ne]: id }
+        }
+      });
+      if (existingSlug) {
+        Logger.error(`Cập nhật thất bại: Slug "${data.slug}" đã tồn tại ở bài viết khác (ID: ${existingSlug.id})`);
+        throw new Error(`Slug "${data.slug}" đã tồn tại. Vui lòng chọn slug khác.`);
+      }
+    }
 
     // Xử lý dịch Tiêu đề bài viết
     if (data.translateTitle && data.title_vi) {
@@ -173,10 +215,25 @@ export class PostService {
       }
     }
 
-    const { translateTitle, translateContent, ...rest } = data;
+    // Loại bỏ các trường hệ thống và cờ trước khi cập nhật
+    const { 
+      translateTitle, 
+      translateContent, 
+      id: _id, 
+      createdAt: _ca, 
+      updatedAt: _ua, 
+      ...rest 
+    } = data as any;
+    
     void translateTitle;
     void translateContent;
-    return await post.update(rest);
+    void _id;
+    void _ca;
+    void _ua;
+
+    const dataUpdate = await post.update(rest);
+    Logger.info(`Cập nhật bài viết ID: ${id} thành công`);
+    return dataUpdate;
   }
 
   /**

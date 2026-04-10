@@ -8,6 +8,7 @@ import {
   PartnerQueryOptions,
   PartnerListResult,
 } from '@/types';
+import { Logger } from '@/lib';
 
 export class PartnerService {
   /**
@@ -76,22 +77,38 @@ export class PartnerService {
    * Tạo Partner mới
    */
   async createPartner(data: CreatePartnerRequest): Promise<Partner> {
+    Logger.info(`Bắt đầu tạo Partner mới: ${data.name}`);
     const attrs: PartnerCreationAttributes = {
       name: data.name,
       logo: data.logo ?? null,
       orderIndex: data.orderIndex ?? 0,
       isActive: data.isActive ?? true,
     };
-    return await Partner.create(attrs);
+    const newPartner = await Partner.create(attrs);
+    Logger.info(`Tạo Partner mới thành công (ID: ${newPartner.id})`);
+    return newPartner;
   }
 
   /**
    * Cập nhật Partner
    */
   async updatePartner(id: number, data: UpdatePartnerRequest): Promise<Partner | null> {
+    Logger.info(`Bắt đầu cập nhật Partner ID: ${id}`);
     const partner = await Partner.findByPk(id);
-    if (!partner) return null;
-    return await partner.update(data);
+    if (!partner) {
+      Logger.warn(`Không tìm thấy Partner ID: ${id} để cập nhật`);
+      return null;
+    }
+
+    // Loại bỏ các trường hệ thống trước khi cập nhật
+    const { id: _id, createdAt: _ca, updatedAt: _ua, ...rest } = data as any;
+    void _id;
+    void _ca;
+    void _ua;
+
+    const updatedPartner = await partner.update(rest);
+    Logger.info(`Cập nhật Partner ID: ${id} thành công`);
+    return updatedPartner;
   }
 
   /**

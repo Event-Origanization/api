@@ -5,6 +5,7 @@ import { CreatePostRequest, UpdatePostRequest, AuthenticatedRequest } from '@/ty
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
 import { HTTP_STATUS, USER_ROLES, POST_STATUS } from '@/constants';
 import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
+import { Logger } from '@/lib';
 
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
@@ -32,9 +33,10 @@ export const getAllPosts = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, result, 'Lấy danh sách bài viết thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy danh sách bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy danh sách bài viết',
+      `Lỗi khi lấy danh sách bài viết: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -58,9 +60,10 @@ export const getPostById = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, post, 'Lấy thông tin bài viết thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy thông tin bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy thông tin bài viết',
+      `Lỗi khi lấy thông tin bài viết: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -84,9 +87,10 @@ export const getPostBySlug = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, post, 'Lấy thông tin bài viết thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy thông tin bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy thông tin bài viết',
+      `Lỗi khi lấy thông tin bài viết: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -108,9 +112,10 @@ export const createPost = async (req: Request, res: Response) => {
     const newPost = await postService.createPost(body);
     return sendSuccessResponse(res, newPost, 'Tạo bài viết mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
+    Logger.error(`Lỗi khi tạo bài viết mới: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi tạo bài viết mới',
+      (error as Error).message,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -147,9 +152,10 @@ export const updatePost = async (req: Request, res: Response) => {
     
     return sendSuccessResponse(res, updatedPost, 'Cập nhật bài viết thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi cập nhật bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi cập nhật bài viết',
+      (error as Error).message,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -170,9 +176,10 @@ export const deletePost = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, null, 'Xóa bài viết thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi xóa bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi xóa bài viết',
+      `Lỗi khi xóa bài viết: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -191,9 +198,10 @@ export const scoreSeo = async (req: Request, res: Response) => {
     
     return sendSuccessResponse(res, result, 'Chấm điểm SEO thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi chấm điểm SEO bài viết: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi chấm điểm SEO bài viết',
+      `Lỗi khi chấm điểm SEO bài viết: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );

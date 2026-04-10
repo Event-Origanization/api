@@ -5,6 +5,7 @@ import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatte
 import { PAGE_KEYS } from '@/constants/seo';
 import { HTTP_STATUS } from '@/constants';
 import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
+import { Logger } from '@/lib';
 
 export const getAllProducts = async (req: Request, res: Response) => {
   try {
@@ -16,6 +17,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       maxPrice,
       isActive,
       productType,
+      category,
       sortBy,
       sortOrder,
     } = req.query;
@@ -28,15 +30,17 @@ export const getAllProducts = async (req: Request, res: Response) => {
       maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
       isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
       productType: productType as typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL,
+      category: category as any,
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'ASC' | 'DESC',
     });
 
     return sendSuccessResponse(res, result, 'Lấy danh sách sản phẩm thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy danh sách sản phẩm: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy danh sách sản phẩm',
+      `Lỗi khi lấy danh sách sản phẩm: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -57,9 +61,10 @@ export const getProductById = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, product, 'Lấy thông tin sản phẩm thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy thông tin sản phẩm: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy thông tin sản phẩm',
+      `Lỗi khi lấy thông tin sản phẩm: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -80,9 +85,10 @@ export const getProductBySlug = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, product, 'Lấy thông tin sản phẩm thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi lấy thông tin sản phẩm: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy thông tin sản phẩm',
+      `Lỗi khi lấy thông tin sản phẩm: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -108,9 +114,10 @@ export const createProduct = async (req: Request, res: Response) => {
     const newProduct = await productService.createProduct(body);
     return sendSuccessResponse(res, newProduct, 'Tạo sản phẩm mới thành công', HTTP_STATUS.CREATED);
   } catch (error) {
+    Logger.error(`Lỗi khi tạo sản phẩm mới: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi tạo sản phẩm mới',
+      `Lỗi khi tạo sản phẩm mới: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -173,9 +180,10 @@ export const updateProduct = async (req: Request, res: Response) => {
     
     return sendSuccessResponse(res, updatedProduct, 'Cập nhật sản phẩm thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi cập nhật sản phẩm: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi cập nhật sản phẩm',
+      `Lỗi khi cập nhật sản phẩm: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -196,9 +204,10 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
     return sendSuccessResponse(res, null, 'Xóa sản phẩm thành công');
   } catch (error) {
+    Logger.error(`Lỗi khi xóa sản phẩm: ${(error as Error).message}`);
     return sendErrorResponse(
       res,
-      'Lỗi khi xóa sản phẩm',
+      `Lỗi khi xóa sản phẩm: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
