@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '@/config/database';
 import { IProduct, ProductCreationAttributes } from '@/types';
-import { PAGE_KEYS } from '@/constants/seo';
+import { PAGE_KEYS, ProductCategory } from '@/constants/seo';
 
 export class Product extends Model<IProduct, ProductCreationAttributes> {
   public id!: number;
@@ -13,6 +13,7 @@ export class Product extends Model<IProduct, ProductCreationAttributes> {
   public images!: string[];
   public isActive!: boolean;
   public productType!: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
+  public category!: ProductCategory | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 }
@@ -61,6 +62,10 @@ Product.init(
       allowNull: false,
       defaultValue: PAGE_KEYS.RENTAL,
     },
+    category: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -78,6 +83,8 @@ Product.init(
       { fields: ['productType'] },
       { fields: ['isActive'] },
       { fields: ['productType', 'isActive'] },
+      { fields: ['category'] },
+      { fields: ['productType', 'category'] },
       { fields: ['createdAt'] },
       {
         name: 'products_search_fulltext',

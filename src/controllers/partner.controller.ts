@@ -23,7 +23,7 @@ export const getAllPartners = async (req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy danh sách đối tác',
+      `Lỗi khi lấy danh sách đối tác: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -37,7 +37,7 @@ export const getActivePartners = async (_req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy danh sách đối tác active',
+      `Lỗi khi lấy danh sách đối tác active: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -60,7 +60,7 @@ export const getPartnerById = async (req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi lấy thông tin đối tác',
+      `Lỗi khi lấy thông tin đối tác: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -88,7 +88,7 @@ export const createPartner = async (req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi tạo đối tác mới',
+      `Lỗi khi tạo đối tác mới: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -128,7 +128,7 @@ export const updatePartner = async (req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi cập nhật đối tác',
+      `Lỗi khi cập nhật đối tác: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );
@@ -152,7 +152,7 @@ export const deletePartner = async (req: Request, res: Response) => {
   } catch (error) {
     return sendErrorResponse(
       res,
-      'Lỗi khi xóa đối tác',
+      `Lỗi khi xóa đối tác: ${(error as Error).message}`,
       HTTP_STATUS.INTERNAL_SERVER_ERROR,
       (error as Error).message
     );

@@ -1,5 +1,5 @@
 import { SAME_SITE_OPTIONS } from '@/constants';
-import { PAGE_KEYS } from '@/constants/seo';
+import { PAGE_KEYS, ProductCategory } from '@/constants/seo';
 import { Request } from 'express';
 import { Options } from 'sequelize';
 import { ConfigGroup, ConfigKey } from '@/constants/config';
@@ -40,6 +40,7 @@ export interface IProduct {
   images: string[];
   isActive: boolean;
   productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
+  category: ProductCategory | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +53,7 @@ export interface ProductCreationAttributes {
   images?: string[];
   isActive?: boolean;
   productType: typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL;
+  category?: ProductCategory | null;
 }
 
 export interface CreateProductRequest extends ProductCreationAttributes {
