@@ -19,6 +19,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
       status,
       sortBy,
       sortOrder,
+      displayLocation,
     } = req.query;
 
     const result = await postService.getAllPosts({
@@ -29,6 +30,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'ASC' | 'DESC',
       isAdmin: !!isAdmin,
+      displayLocation: displayLocation as string,
     });
 
     return sendSuccessResponse(res, result, 'Lấy danh sách bài viết thành công');
@@ -100,6 +102,14 @@ export const getPostBySlug = async (req: Request, res: Response) => {
 export const createPost = async (req: Request, res: Response) => {
   try {
     const body: CreatePostRequest = req.body;
+
+    if (body.display_locations && typeof body.display_locations === 'string') {
+      try {
+        body.display_locations = JSON.parse(body.display_locations);
+      } catch (err) {
+        Logger.error(`Lỗi khi parse display_locations: ${(err as Error).message}`);
+      }
+    }
     
     // Handle image upload to Cloudinary if a file was provided
     if (req.file) {
@@ -111,13 +121,14 @@ export const createPost = async (req: Request, res: Response) => {
     
     const newPost = await postService.createPost(body);
     return sendSuccessResponse(res, newPost, 'Tạo bài viết mới thành công', HTTP_STATUS.CREATED);
-  } catch (error) {
-    Logger.error(`Lỗi khi tạo bài viết mới: ${(error as Error).message}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    Logger.error(`Lỗi khi tạo bài viết mới: ${error.message}`);
     return sendErrorResponse(
       res,
-      (error as Error).message,
-      HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      (error as Error).message
+      error.message,
+      error.code === 'WEEKLY_HIGHLIGHT_LIMIT_EXCEEDED' ? HTTP_STATUS.BAD_REQUEST : HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error.code || error.message
     );
   }
 };
@@ -129,6 +140,14 @@ export const updatePost = async (req: Request, res: Response) => {
       return sendErrorResponse(res, 'Thiếu ID bài viết', HTTP_STATUS.BAD_REQUEST);
     }
     const body: UpdatePostRequest = req.body;
+
+    if (body.display_locations && typeof body.display_locations === 'string') {
+      try {
+        body.display_locations = JSON.parse(body.display_locations);
+      } catch (err) {
+        Logger.error(`Lỗi khi parse display_locations: ${(err as Error).message}`);
+      }
+    }
     
     // Check if post exists for potential image management
     const existingPost = await postService.getPostById(parseInt(id), true); // True because admin is updating
@@ -151,13 +170,14 @@ export const updatePost = async (req: Request, res: Response) => {
     const updatedPost = await postService.updatePost(parseInt(id), body);
     
     return sendSuccessResponse(res, updatedPost, 'Cập nhật bài viết thành công');
-  } catch (error) {
-    Logger.error(`Lỗi khi cập nhật bài viết: ${(error as Error).message}`);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    Logger.error(`Lỗi khi cập nhật bài viết: ${error.message}`);
     return sendErrorResponse(
       res,
-      (error as Error).message,
-      HTTP_STATUS.INTERNAL_SERVER_ERROR,
-      (error as Error).message
+      error.message,
+      error.code === 'WEEKLY_HIGHLIGHT_LIMIT_EXCEEDED' ? HTTP_STATUS.BAD_REQUEST : HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      error.code || error.message
     );
   }
 };

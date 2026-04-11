@@ -20,6 +20,7 @@ export class Post extends Model<IPost, PostCreationAttributes> {
   public seoSuggestions!: string | null;
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
+  public display_locations!: string[];
 }
 
 Post.init(
@@ -82,6 +83,11 @@ Post.init(
     seoSuggestions: {
       type: DataTypes.TEXT,
       allowNull: true,
+    },
+    display_locations: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: ['OTHER_POST'],
     },
     createdAt: {
       type: DataTypes.DATE,

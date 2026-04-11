@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { productService } from '@/services/product.service';
 import { CreateProductRequest, UpdateProductRequest } from '@/types';
 import { sendSuccessResponse, sendErrorResponse } from '@/utils/responseFormatter';
-import { PAGE_KEYS } from '@/constants/seo';
+import { PAGE_KEYS, ProductCategory } from '@/constants/seo';
 import { HTTP_STATUS } from '@/constants';
 import { uploadImage, deleteImageByUrl } from '@/utils/cloudinary';
 import { Logger } from '@/lib';
@@ -30,7 +30,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
       maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
       isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
       productType: productType as typeof PAGE_KEYS.SOUND_LIGHT | typeof PAGE_KEYS.RENTAL,
-      category: category as any,
+      category: category as ProductCategory | ProductCategory[],
       sortBy: sortBy as string,
       sortOrder: sortOrder as 'ASC' | 'DESC',
     });
@@ -140,7 +140,18 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     // Parse existing images if passed as a string/array from frontend
     let currentImages: string[] = [];
-    if (body.images) {
+    if (req.body.existingImages !== undefined) {
+      if (typeof req.body.existingImages === 'string') {
+        try {
+          currentImages = JSON.parse(req.body.existingImages);
+        } catch {
+          currentImages = [];
+        }
+      } else if (Array.isArray(req.body.existingImages)) {
+        currentImages = [...req.body.existingImages];
+      }
+    } else if (body.images) {
+      // Fallback for older client requests
       if (typeof body.images === 'string') {
         try {
           currentImages = JSON.parse(body.images);
@@ -148,7 +159,7 @@ export const updateProduct = async (req: Request, res: Response) => {
           currentImages = [body.images];
         }
       } else if (Array.isArray(body.images)) {
-        currentImages = [...body.images];
+        currentImages = [...body.images].filter(i => typeof i === 'string');
       }
     } else {
       currentImages = existingProduct.images || [];
@@ -175,6 +186,7 @@ export const updateProduct = async (req: Request, res: Response) => {
     }
     // Update body.images to final array
     body.images = currentImages;
+    if ('existingImages' in body) delete (body as { existingImages?: string[] }).existingImages;
     
     const updatedProduct = await productService.updateProduct(parseInt(id), body);
     
