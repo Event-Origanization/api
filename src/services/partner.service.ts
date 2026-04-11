@@ -101,12 +101,14 @@ export class PartnerService {
     }
 
     // Loại bỏ các trường hệ thống trước khi cập nhật
-    const { id: _id, createdAt: _ca, updatedAt: _ua, ...rest } = data as any;
-    void _id;
-    void _ca;
-    void _ua;
+    const { ...rest } = data as UpdatePartnerRequest & { id?: number; createdAt?: Date; updatedAt?: Date };
+    
+    const finalUpdate = { ...rest };
+    delete (finalUpdate as { id?: number }).id;
+    delete (finalUpdate as { createdAt?: Date }).createdAt;
+    delete (finalUpdate as { updatedAt?: Date }).updatedAt;
 
-    const updatedPartner = await partner.update(rest);
+    const updatedPartner = await partner.update(finalUpdate);
     Logger.info(`Cập nhật Partner ID: ${id} thành công`);
     return updatedPartner;
   }

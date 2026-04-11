@@ -64,6 +64,12 @@ export interface UpdateProductRequest extends Partial<ProductCreationAttributes>
   translateName?: boolean;
 }
 
+export enum POST_DISPLAY_LOCATION {
+  EVENT_IMAGE = 'EVENT_IMAGE',
+  WEEKLY_HIGHLIGHT = 'WEEKLY_HIGHLIGHT',
+  OTHER_POST = 'OTHER_POST'
+}
+
 export interface IPost {
   id: number;
   title_vi: string;
@@ -79,6 +85,7 @@ export interface IPost {
   seoScore: number | null;
   seoAnalysis: string | null;
   seoSuggestions: string | null;
+  display_locations: POST_DISPLAY_LOCATION[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -96,6 +103,7 @@ export interface PostCreationAttributes {
   seoScore?: number | null;
   seoAnalysis?: string | null;
   seoSuggestions?: string | null;
+  display_locations?: POST_DISPLAY_LOCATION[];
 }
 
 export interface CreatePostRequest extends PostCreationAttributes {

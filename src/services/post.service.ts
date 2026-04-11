@@ -6,6 +6,35 @@ import { sanitizeSearch } from '@/utils/helpers';
 import { Logger } from '@/lib';
 
 export class PostService {
+  private async checkWeeklyHighlightLimit(display_locations?: string[], currentPostId?: number) {
+    if (!display_locations || !display_locations.includes('WEEKLY_HIGHLIGHT')) return;
+    
+    // Đếm số lượng bài đang được set WEEKLY_HIGHLIGHT
+    const where: WhereOptions<IPost> = {};
+    Object.assign(where, {
+      [Op.and]: [
+        Post.sequelize!.literal(`JSON_CONTAINS(display_locations, '"WEEKLY_HIGHLIGHT"')`)
+      ]
+    });
+    
+    if (currentPostId) {
+      where.id = { [Op.ne]: currentPostId };
+    }
+    
+    const existingHighlights = await Post.findAll({
+      where,
+      attributes: ['title_vi']
+    });
+    
+    if (existingHighlights.length >= 4) {
+      const titles = existingHighlights.map(p => `- ${p.title_vi}`).join('\n');
+      Logger.warn(`Đã đạt giới hạn 4 bài Nổi bật trong tuần. Cảnh báo người dùng.`);
+      
+      const error = new Error(`Đã đạt giới hạn 4 bài "Nổi bật trong tuần". Bạn cần gỡ Nổi bật ở các bài viết sau trước khi thêm mới:\n\n${titles}`);
+      Object.assign(error, { code: 'WEEKLY_HIGHLIGHT_LIMIT_EXCEEDED' });
+      throw error;
+    }
+  }
   /**
    * Get all posts with search, filter and pagination
    */
@@ -17,6 +46,7 @@ export class PostService {
     sortBy?: string;
     sortOrder?: 'ASC' | 'DESC';
     isAdmin?: boolean;
+    displayLocation?: string;
   }) {
     const {
       page = 1,
@@ -26,10 +56,12 @@ export class PostService {
       sortBy = 'createdAt',
       sortOrder = 'DESC',
       isAdmin = false,
+      displayLocation,
     } = query;
 
     const offset = (page - 1) * limit;
     const where: WhereOptions<IPost> = {};
+    const andConditions: WhereOptions<IPost>[] = [];
 
     // Search by title (VI, EN, ZH) using Full-Text Search
     if (search) {
@@ -38,8 +70,18 @@ export class PostService {
         const matchLiteral = Post.sequelize.literal(
           `MATCH(title_vi, title_en, title_zh) AGAINST(${Post.sequelize.escape(sanitizedSearch)} IN NATURAL LANGUAGE MODE)`
         );
-        Object.assign(where, { [Op.and]: [matchLiteral] });
+        andConditions.push(matchLiteral);
       }
+    }
+
+    if (displayLocation) {
+      andConditions.push(
+        Post.sequelize!.literal(`JSON_CONTAINS(display_locations, '"${displayLocation}"')`)
+      );
+    }
+
+    if (andConditions.length > 0) {
+      Object.assign(where, { [Op.and]: andConditions });
     }
 
     // Filter by status
@@ -117,6 +159,9 @@ export class PostService {
   async createPost(data: CreatePostRequest) {
     Logger.info(`Bắt đầu tạo bài viết mới: ${data.title_vi}`);
     
+    // Check constraint for WEEKLY_HIGHLIGHT
+    await this.checkWeeklyHighlightLimit(data.display_locations);
+    
     // Kiểm tra slug duy nhất
     const existingSlug = await Post.findOne({ where: { slug: data.slug } });
     if (existingSlug) {
@@ -138,22 +183,23 @@ export class PostService {
     }
 
     // Loại bỏ các cờ và trường hệ thống trước khi lưu vào DB
+    // Loại bỏ cờ và các trường hệ thống trước khi lưu DB
     const { 
       translateTitle, 
       translateContent, 
-      id: _id, 
-      createdAt: _ca, 
-      updatedAt: _ua, 
       ...rest 
-    } = data as any;
+    } = data as CreatePostRequest & { id?: number; createdAt?: Date; updatedAt?: Date };
+
+    // Explicitly remove system fields that might be in the literal object
+    const finalData = { ...rest };
+    delete (finalData as { id?: number }).id;
+    delete (finalData as { createdAt?: Date }).createdAt;
+    delete (finalData as { updatedAt?: Date }).updatedAt;
 
     void translateTitle;
     void translateContent;
-    void _id;
-    void _ca;
-    void _ua;
 
-    const newPost = await Post.create(rest as PostCreationAttributes);
+    const newPost = await Post.create(finalData as PostCreationAttributes);
     Logger.info(`Tạo bài viết mới thành công (ID: ${newPost.id})`);
     return newPost;
   }
@@ -167,6 +213,10 @@ export class PostService {
     if (!post) {
       Logger.warn(`Không tìm thấy bài viết ID: ${id} để cập nhật`);
       return null;
+    }
+
+    if (data.display_locations) {
+      await this.checkWeeklyHighlightLimit(data.display_locations, id);
     }
 
     // Kiểm tra slug nếu có thay đổi
@@ -219,19 +269,19 @@ export class PostService {
     const { 
       translateTitle, 
       translateContent, 
-      id: _id, 
-      createdAt: _ca, 
-      updatedAt: _ua, 
       ...rest 
-    } = data as any;
+    } = data as UpdatePostRequest & { id?: number; createdAt?: Date; updatedAt?: Date };
     
+    // Explicitly remove system fields
+    const finalUpdate = { ...rest };
+    delete (finalUpdate as { id?: number }).id;
+    delete (finalUpdate as { createdAt?: Date }).createdAt;
+    delete (finalUpdate as { updatedAt?: Date }).updatedAt;
+
     void translateTitle;
     void translateContent;
-    void _id;
-    void _ca;
-    void _ua;
 
-    const dataUpdate = await post.update(rest);
+    const dataUpdate = await post.update(finalUpdate);
     Logger.info(`Cập nhật bài viết ID: ${id} thành công`);
     return dataUpdate;
   }

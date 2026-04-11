@@ -50,17 +50,17 @@ Highlight.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
-      field: 'orderIndex'
+      field: 'order_index'
     },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'createdAt'
+      field: 'created_at'
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      field: 'updatedAt'
+      field: 'updated_at'
     },
   },
   {
@@ -68,7 +68,7 @@ Highlight.init(
     tableName: 'highlights',
     modelName: 'Highlight',
     indexes: [
-      { fields: ['orderIndex'] }
+      { fields: ['order_index'] }
     ]
   }
 );
