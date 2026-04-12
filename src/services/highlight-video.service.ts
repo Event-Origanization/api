@@ -10,6 +10,7 @@ export class HighlightVideoService {
   async getAllHighlightVideos(query: {
     page?: number;
     limit?: number;
+    skip?: number;
     search?: string;
     isActive?: boolean;
     sortBy?: string;
@@ -18,13 +19,14 @@ export class HighlightVideoService {
     const {
       page = 1,
       limit = 10,
+      skip = 0,
       search,
       isActive,
       sortBy = 'orderIndex',
       sortOrder = 'ASC',
     } = query;
 
-    const offset = (page - 1) * limit;
+    const offset = skip + (page - 1) * limit;
     const where: WhereOptions<IHighlightVideo> = {};
 
     // Search by title (VI, EN, ZH)
@@ -52,7 +54,7 @@ export class HighlightVideoService {
 
     return {
       total: count,
-      totalPages: Math.ceil(count / limit),
+      totalPages: Math.ceil(Math.max(0, count - skip) / limit),
       currentPage: page,
       videos: rows,
     };

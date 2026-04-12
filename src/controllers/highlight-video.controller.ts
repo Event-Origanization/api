@@ -10,15 +10,17 @@ export const getAllHighlightVideos = async (req: Request, res: Response) => {
     const {
       page,
       limit,
+      skip,
       search,
       isActive,
       sortBy,
       sortOrder,
     } = req.query;
-
+ 
     const result = await highlightVideoService.getAllHighlightVideos({
       page: page ? parseInt(page as string) : undefined,
       limit: limit ? parseInt(limit as string) : undefined,
+      skip: skip ? parseInt(skip as string) : undefined,
       search: search as string,
       isActive: isActive === 'true' ? true : isActive === 'false' ? false : undefined,
       sortBy: sortBy as string,
