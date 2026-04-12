@@ -149,9 +149,9 @@ module.exports = {
       {
         key: 'MENU_SOUND_LIGHT',
         group: 'MENU',
-        value_vi: '7Seven',
-        value_en: '7Seven',
-        value_zh: '7Seven',
+        value_vi: 'SEVEN LIGHTING & SOUND',
+        value_en: 'SEVEN LIGHTING & SOUND',
+        value_zh: 'SEVEN LIGHTING & SOUND',
         created_at: new Date(),
         updated_at: new Date()
       },
