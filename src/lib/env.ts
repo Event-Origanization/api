@@ -34,6 +34,7 @@ export const ENV = {
   EMAIL_PORT: process.env["EMAIL_PORT"],
   EMAIL_USER: process.env["EMAIL_USER"],
   EMAIL_PASS: process.env["EMAIL_PASS"],
+  EMAIL_COMPANY: process.env["EMAIL_COMPANY"],
 
   FRONTEND_URL: process.env["FRONTEND_URL"],
 
