@@ -1,5 +1,6 @@
 import { Op, WhereOptions } from 'sequelize';
 import { ContactMessage } from '@/models/ContactMessage';
+import { EmailService } from '@/services/email.service';
 import {
   IContactMessage,
   ContactMessageCreationAttributes,
@@ -8,6 +9,7 @@ import {
   ContactMessageQueryOptions,
   ContactMessageListResult,
 } from '@/types';
+import { Logger } from '@/lib';
 
 export class ContactMessageService {
   /**
@@ -73,7 +75,19 @@ export class ContactMessageService {
       phone: data.phone || '',
       message: data.message,
     };
-    return await ContactMessage.create(attrs);
+    const newMessage = await ContactMessage.create(attrs);
+
+    // Gửi email thông báo tới công ty (fire & forget — không chặn response)
+    EmailService.sendContactMessageNotification({
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      message: data.message,
+    }).catch((err: unknown) => {
+      Logger.error(`[ContactMessageService] Failed to send company notification email: ${err}`);
+    });
+
+    return newMessage;
   }
 
   /**

@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { ENV } from '@/lib';
+import { ENV, Logger } from '@/lib';
 
 export class EmailService {
   private static transporter: nodemailer.Transporter;
@@ -131,6 +131,117 @@ export class EmailService {
       return true;
     } catch (error) {
       console.error('Error sending password reset email:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Send contact message notification email to company
+   */
+  static async sendContactMessageNotification(data: {
+    name: string;
+    email: string;
+    phone?: string;
+    message: string;
+  }): Promise<boolean> {
+    try {
+      if (!this.transporter) {
+        this.initializeTransporter();
+      }
+
+      const companyEmail = ENV.EMAIL_COMPANY;
+      if (!companyEmail) {
+        Logger.error('[EmailService] EMAIL_COMPANY is not configured. Skipping notification.');
+        return false;
+      }
+
+      const receivedAt = new Date().toLocaleString('vi-VN', {
+        timeZone: 'Asia/Ho_Chi_Minh',
+        dateStyle: 'full',
+        timeStyle: 'short',
+      });
+
+      const phoneDisplay = data.phone
+        ? `<div style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+              <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📞 Số điện thoại</p>
+              <p style="margin: 0; color: #333; font-size: 15px; font-weight: 600;">${data.phone}</p>
+            </div>`
+        : '';
+
+      const mailOptions = {
+        from: `"5PEVENT" <${ENV.EMAIL_USER}>`,
+        to: companyEmail,
+        subject: `🔔 TIN NHẮN LIÊN HỆ MỚI TỪ: ${data.name}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 620px; width: 100%; margin: 0 auto; background-color: #f5f7fa; padding: 16px; box-sizing: border-box;">
+
+            <!-- Header -->
+            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); padding: 28px 20px; border-radius: 12px 12px 0 0; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 1px; line-height: 1.4;">
+                🔔 Tin Nhắn Liên Hệ Mới
+              </h1>
+              <p style="color: #a0aec0; margin: 8px 0 0 0; font-size: 13px;">
+                Nhận lúc: ${receivedAt}
+              </p>
+            </div>
+
+            <!-- Body -->
+            <div style="background-color: #ffffff; padding: 24px 20px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.08);">
+
+              <p style="color: #555; font-size: 14px; margin: 0 0 20px 0; line-height: 1.6;">
+                Một khách hàng vừa gửi tin nhắn liên hệ qua website. Dưới đây là thông tin chi tiết:
+              </p>
+
+              <!-- Info Cards (stacked, mobile-safe) -->
+              <div style="margin-bottom: 20px;">
+
+                <div style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                  <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">👤 Họ và tên</p>
+                  <p style="margin: 0; color: #333; font-size: 15px; font-weight: 600;">${data.name}</p>
+                </div>
+
+                <div style="padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+                  <p style="margin: 0 0 4px 0; color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">✉️ Email</p>
+                  <a href="mailto:${data.email}" style="color: #0f3460; text-decoration: none; font-weight: 600; font-size: 15px; word-break: break-all;">${data.email}</a>
+                </div>
+
+                ${phoneDisplay}
+
+              </div>
+
+              <!-- Message Block -->
+              <div style="margin-bottom: 8px;">
+                <p style="color: #888; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 10px 0;">💬 Nội dung tin nhắn</p>
+                <div style="background-color: #f8f9fc; border-left: 4px solid #0f3460; border-radius: 0 8px 8px 0; padding: 14px 16px;">
+                  <p style="color: #333; font-size: 14px; margin: 0; line-height: 1.8; white-space: pre-wrap; word-break: break-word;">${data.message}</p>
+                </div>
+              </div>
+
+              <!-- CTA -->
+              <div style="margin-top: 24px; text-align: center;">
+                <a href="mailto:${data.email}"
+                   style="background: linear-gradient(135deg, #0f3460, #16213e); color: #ffffff; padding: 12px 24px;
+                          text-decoration: none; border-radius: 8px; display: inline-block; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">
+                  ↩️ Phản Hồi Ngay
+                </a>
+              </div>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; padding: 16px 0 0 0;">
+              <p style="color: #aaa; font-size: 12px; margin: 0; line-height: 1.6;">
+                Email này được gửi tự động từ hệ thống 5PEVENT.<br>Vui lòng không reply trực tiếp email này.
+              </p>
+            </div>
+
+          </div>
+        `,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      return true;
+    } catch (error) {
+      Logger.error(`[EmailService] Error sending contact message notification: ${error}`);
       return false;
     }
   }

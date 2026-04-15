@@ -124,3 +124,10 @@ export const uploadRateLimiter = createRateLimiter({
   max: 20, // 20 uploads per hour
   message: 'Too many upload attempts. Please try again later.',
 });
+
+export const contactRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,                    // 5 submissions per window per IP
+  message: 'Bạn đã gửi quá nhiều tin nhắn. Vui lòng thử lại sau 15 phút.',
+});
+
