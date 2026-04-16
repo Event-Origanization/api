@@ -414,7 +414,7 @@ export interface UpdateNewsletterSubscriberRequest {
 export interface IContactMessage {
   id: number;
   name: string;
-  email: string;
+  email: string | null;
   phone: string;
   message: string;
   isRead: boolean;
@@ -428,8 +428,8 @@ export type ContactMessageCreationAttributes = Omit<IContactMessage, 'id' | 'cre
 
 export interface CreateContactMessageRequest {
   name: string;
-  email: string;
-  phone?: string;
+  email?: string | null;
+  phone: string;
   message: string;
 }
 
