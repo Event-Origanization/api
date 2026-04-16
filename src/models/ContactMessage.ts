@@ -5,7 +5,7 @@ import { IContactMessage, ContactMessageCreationAttributes } from '@/types';
 export class ContactMessage extends Model<IContactMessage, ContactMessageCreationAttributes> implements IContactMessage {
   public id!: number;
   public name!: string;
-  public email!: string;
+  public email!: string | null;
   public phone!: string;
   public message!: string;
   public isRead!: boolean;
@@ -27,14 +27,14 @@ ContactMessage.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         isEmail: true,
       },
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
     message: {
       type: DataTypes.TEXT,

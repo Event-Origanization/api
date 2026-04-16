@@ -110,11 +110,11 @@ module.exports = {
         updated_at: new Date()
       },
       {
-        key: 'SOCIAL_INSTAGRAM',
+        key: 'SOCIAL_TIKTOK',
         group: 'SOCIAL',
-        value_vi: 'https://instagram.com/5pevent',
-        value_en: 'https://instagram.com/5pevent',
-        value_zh: 'https://instagram.com/5pevent',
+        value_vi: 'https://tiktok.com/@5pevent',
+        value_en: 'https://tiktok.com/@5pevent',
+        value_zh: 'https://tiktok.com/@5pevent',
         created_at: new Date(),
         updated_at: new Date()
       },
