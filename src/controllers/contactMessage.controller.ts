@@ -56,14 +56,16 @@ export const createContactMessage = async (req: Request, res: Response) => {
   try {
     const body: CreateContactMessageRequest = req.body;
 
-    if (!body.name || !body.email || !body.message) {
-      return sendErrorResponse(res, 'Vui lòng điền đủ Tên, Email và Nội dung', HTTP_STATUS.BAD_REQUEST);
+    if (!body.name || !body.phone || !body.message) {
+      return sendErrorResponse(res, 'Vui lòng điền đủ Tên, Số điện thoại và Nội dung', HTTP_STATUS.BAD_REQUEST);
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(body.email)) {
-      return sendErrorResponse(res, 'Email không hợp lệ', HTTP_STATUS.BAD_REQUEST);
+    // Email validation if provided
+    if (body.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(body.email)) {
+        return sendErrorResponse(res, 'Email không hợp lệ', HTTP_STATUS.BAD_REQUEST);
+      }
     }
 
     const newMessage = await contactMessageService.createContactMessage(body);
