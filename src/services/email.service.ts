@@ -140,7 +140,7 @@ export class EmailService {
    */
   static async sendContactMessageNotification(data: {
     name: string;
-    email: string;
+    email: string | null;
     phone?: string;
     message: string;
   }): Promise<boolean> {

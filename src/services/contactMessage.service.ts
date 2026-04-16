@@ -71,8 +71,8 @@ export class ContactMessageService {
   async createContactMessage(data: CreateContactMessageRequest): Promise<ContactMessage> {
     const attrs: ContactMessageCreationAttributes = {
       name: data.name,
-      email: data.email || null,
-      phone: data.phone,
+      email: data.email ?? null,
+      phone: data.phone || '',
       message: data.message,
     };
     const newMessage = await ContactMessage.create(attrs);
