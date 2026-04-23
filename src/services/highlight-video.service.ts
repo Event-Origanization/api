@@ -22,8 +22,8 @@ export class HighlightVideoService {
       skip = 0,
       search,
       isActive,
-      sortBy = 'orderIndex',
-      sortOrder = 'ASC',
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
     } = query;
 
     const offset = skip + (page - 1) * limit;
