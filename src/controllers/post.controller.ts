@@ -10,7 +10,7 @@ import { Logger } from '@/lib';
 export const getAllPosts = async (req: Request, res: Response) => {
   try {
     const authReq = req as AuthenticatedRequest;
-    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN && req.query['isAdminMode'] === 'true';
 
     const {
       page,
@@ -48,7 +48,7 @@ export const getAllPosts = async (req: Request, res: Response) => {
 export const getPostById = async (req: Request, res: Response) => {
   try {
     const authReq = req as AuthenticatedRequest;
-    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN && req.query['isAdminMode'] === 'true';
 
     const { id } = req.params;
     if (!id) {
@@ -75,7 +75,7 @@ export const getPostById = async (req: Request, res: Response) => {
 export const getPostBySlug = async (req: Request, res: Response) => {
   try {
     const authReq = req as AuthenticatedRequest;
-    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN;
+    const isAdmin = authReq.user && authReq.user.role === USER_ROLES.ROLE_ADMIN && req.query['isAdminMode'] === 'true';
 
     const { slug } = req.params;
     if (!slug) {
